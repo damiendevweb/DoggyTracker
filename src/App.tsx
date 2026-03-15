@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import { AuthPage } from './pages/AuthPage'
-import { Dashboard } from './pages/Dashboard'
+// import { Dashboard } from './pages/Dashboard'
 import { AnimalPage } from './pages/AnimalPage'
 
 function App() {
@@ -27,19 +27,12 @@ function App() {
       )}
       
       <Routes>
-        {/* Route protégée : dashboard */}
-        <Route 
+        {/* <Route 
           path="/" 
           element={user ? <Dashboard /> : <Navigate to="/login" />}
-        />
-        
-        {/* Route publique : animal par ID */}
+        /> */}
         <Route path="/:animalId" element={<AnimalPage />} />
-        
-        {/* Route login */}
         <Route path="/login" element={<AuthPage />} />
-        
-        {/* Redirige tout le reste vers login */}
         <Route path="*" element={<Navigate to={user ? "/" : "/login"} />} />
       </Routes>
     </div>
