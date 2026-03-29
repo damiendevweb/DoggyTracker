@@ -42,7 +42,14 @@ function App() {
             user ? <Dashboard /> : <Navigate to="/login" />
           } />
         <Route path='generate-qr-code' element={<GenerateQR />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route 
+          path="*" 
+          element={
+            window.location.pathname.match(/\.(png|ico|svg|webmanifest|json)$/) 
+              ? null 
+              : <Navigate to="/" />
+          } 
+        />
       </Routes>
     </div>
   )
