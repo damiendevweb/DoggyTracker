@@ -34,22 +34,21 @@ function App() {
       )}
       
       <Routes>
+        <Route path="/manifest.webmanifest" element={<Navigate to="/" replace />} />
+        <Route path="/favicon.ico" element={<Navigate to="/" replace />} />
+        <Route path="/icons/*" element={<Navigate to="/" replace />} />
+
         <Route path="/" element={<HomePage />} />
-        <Route path="/:animalId" element={<AnimalPage />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/dashboard" element={
-            user ? <Dashboard /> : <Navigate to="/login" />
-          } />
+          user ? <Dashboard /> : <Navigate to="/login" />
+        } />
         <Route path='generate-qr-code' element={<GenerateQR />} />
-        <Route 
-          path="*" 
-          element={
-            window.location.pathname.match(/\.(png|ico|svg|webmanifest|json)$/) 
-              ? null 
-              : <Navigate to="/" />
-          } 
-        />
+
+        <Route path="/:animalId" element={<AnimalPage />} />
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   )
