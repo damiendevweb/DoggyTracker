@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useGeolocation } from '../hooks/useGeolocation'
+import { useReverseGeocoding } from '../hooks/useReverseGeocoding'
 
 type Animal = {
   id: string
@@ -30,7 +31,20 @@ export const AnimalPage = () => {
   const [animal, setAnimal] = useState<Animal | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { latitude: lat, longitude: lng, getLocation } = useGeolocation()
+
+  const {
+    latitude: lat,
+    longitude: lng,
+    getLocation,
+    loading: geoLoading,
+    error: geoError,
+  } = useGeolocation()
+
+  const {
+    address,
+    loading: addressLoading,
+    error: addressError,
+  } = useReverseGeocoding(lat ?? null, lng ?? null)
 
   const normalizedAnimalId = animalId?.toUpperCase() ?? ''
   const isFicheEmpty = animal && (!animal.nom || animal.nom.trim() === '')
@@ -195,14 +209,38 @@ export const AnimalPage = () => {
   return (
     <div className="max-w-2xl mx-auto p-8">
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border mb-8">
-        <div className="flex justify-between items-start mb-6">
-          {lat != null && lng != null ? (
+        <div className="flex flex-col gap-2 mb-6">
+          {geoLoading ? (
+            <p className="text-blue-500 p-3 bg-blue-50 rounded-lg font-mono">
+              🔍 Localisation...
+            </p>
+          ) : geoError ? (
+            <p className="text-red-500 p-3 bg-red-50 rounded-lg font-mono">
+              ⚠️ {geoError}
+            </p>
+          ) : lat != null && lng != null ? (
             <p className="text-green-600 p-4 bg-green-50 rounded-lg font-mono">
               📍 {lat.toFixed(6)}, {lng.toFixed(6)}
             </p>
           ) : (
             <p className="text-gray-500 p-3 bg-gray-50 rounded-lg font-mono">
               📍 Non disponible
+            </p>
+          )}
+
+          {addressLoading ? (
+            <p className="text-blue-500 p-3 bg-blue-50 rounded-lg text-sm">
+              🔍 Résolution de l'adresse...
+            </p>
+          ) : address?.displayName ? (
+            <p className="text-gray-700 p-4 bg-white rounded-lg border text-sm">
+              📬 {address.displayName}
+            </p>
+          ) : null}
+
+          {addressError && (
+            <p className="text-orange-500 p-3 bg-orange-50 rounded-lg text-sm">
+              ⚠️ Adresse introuvable : {addressError}
             </p>
           )}
         </div>
