@@ -108,7 +108,7 @@ export const Dashboard = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-8">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border">
+            <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border">
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex gap-2">
                         <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-mono m-auto">

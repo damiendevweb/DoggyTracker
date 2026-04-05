@@ -203,9 +203,9 @@ export const AnimalPage = () => {
 
   if (isFicheEmpty) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 text-center bg-gradient-to-br from-yellow-50 to-orange-50">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 text-center bg-linear-to-br from-yellow-50 to-orange-50">
         <div className="max-w-md p-8 bg-white rounded-3xl shadow-2xl border-4 border-dashed border-yellow-200">
-          <div className="w-24 h-24 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg">
+          <div className="w-24 h-24 bg-linear-to-r from-yellow-400 to-orange-500 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg">
             <span className="text-3xl font-bold text-white">🐕</span>
           </div>
 
@@ -232,7 +232,7 @@ export const AnimalPage = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href={`/login?mode=signup&animal=${normalizedAnimalId}`}
-              className="flex-1 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white py-4 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-orange-500/25 transition-all text-center"
+              className="flex-1 bg-linear-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white py-4 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-orange-500/25 transition-all text-center"
             >
               ✍️ Remplir ma fiche
             </a>
@@ -248,7 +248,7 @@ export const AnimalPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-8">
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border mb-8">
+      <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border mb-8">
         <div className="flex flex-col gap-2 mb-6">
 
           {addressLoading ? (

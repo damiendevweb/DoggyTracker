@@ -4,7 +4,7 @@ export const GenerateQR = () => {
   const { randomId, storageUrl, generateNewQR, loading } = useDoggyQR();
 
   return (
-    <section className="p-6 bg-white p-6 rounded-2xl shadow-2xl ">
+    <section className="p-6 bg-white rounded-2xl shadow-2xl ">
       <h3 className="text-xl font-bold mb-4 text-center">🐕 Générateur Doggy QR</h3>
       <button
         onClick={generateNewQR}
