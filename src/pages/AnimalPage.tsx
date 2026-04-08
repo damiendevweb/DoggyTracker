@@ -51,8 +51,6 @@ export const AnimalPage = () => {
 
     const {
         address,
-        loading: addressLoading,
-        error: addressError,
     } = useReverseGeocoding(lat ?? null, lng ?? null)
 
     const normalizedAnimalId = animalId?.toUpperCase() ?? ''
@@ -254,24 +252,6 @@ export const AnimalPage = () => {
     return (
         <div className="max-w-2xl mx-auto p-8">
             <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border mb-8">
-                <div className="flex flex-col gap-2 mb-6">
-
-                    {addressLoading ? (
-                        <p className="text-blue-500 p-3 bg-blue-50 rounded-lg text-sm">
-                            🔍 Résolution de l'adresse...
-                        </p>
-                    ) : address?.shortAddress ? (
-                        <p className="text-gray-700 p-4 bg-white rounded-lg border text-sm">
-                            📬 {address.shortAddress}
-                        </p>
-                    ) : null}
-
-                    {addressError && (
-                        <p className="text-orange-500 p-3 bg-orange-50 rounded-lg text-sm">
-                            ⚠️ Adresse introuvable : {addressError}
-                        </p>
-                    )}
-                </div>
 
                 <div className="max-w-2xl mx-auto p-8">
                     <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-mono">
