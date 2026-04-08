@@ -68,9 +68,9 @@ export const AuthPage = () => {
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-sm mx-auto p-6 border rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold text-center mb-6">
+            <h3 className="text-2xl font-bold text-center mb-6">
                 {isSignUp ? 'Inscription' : 'Connexion'}
-            </h1>
+            </h3>
 
             {isSignUp && (
                 <>

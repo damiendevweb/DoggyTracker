@@ -10,7 +10,6 @@ export const ResetPasswordPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Optionnel : vérif event PASSWORD_RECOVERY
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event) => {
         if (event !== 'PASSWORD_RECOVERY') {
@@ -50,7 +49,7 @@ export const ResetPasswordPage = () => {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 max-w-sm mx-auto p-6 border rounded-lg shadow-md mt-10"
     >
-      <h1 className="text-2xl font-bold text-center mb-4">Nouveau mot de passe</h1>
+      <h3 className="text-2xl font-bold text-center mb-4">Nouveau mot de passe</h3>
 
       <input
         type="password"

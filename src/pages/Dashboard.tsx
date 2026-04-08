@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import { useAge } from '../hooks/useAge'
 import EnablePushButton from '../components/EnablePushButton'
 import TestPushButton from '../components/TestPushButton'
+import SidebarProfile from '../components/SidebarProfile'
 
 type Animal = {
     id: string
@@ -125,7 +126,8 @@ export const Dashboard = () => {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-8">
+            <div className="min-h-screen bg-slate-50 md:flex">
+              <SidebarProfile />
             <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border">
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex gap-2">
@@ -179,7 +181,7 @@ export const Dashboard = () => {
                             </div>
                         ) : (
                             <>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{animal.nom}</h1>
+                                <h3 className="text-3xl font-bold text-gray-900 mb-2">{animal.nom}</h3>
                                 <p className="text-xl text-gray-600">{animal.race}</p>
                             </>
                         )}

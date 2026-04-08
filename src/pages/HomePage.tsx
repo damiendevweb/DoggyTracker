@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom'
 export const HomePage = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
-      {/* Hero */}
       <section className="max-w-4xl mx-auto px-6 py-24 text-center">
         <div className="mb-8">
-          <h1 className="text-5xl md:text-6xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          <h2 className="text-5xl md:text-6xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
             DoggyTracker
-          </h1>
+          </h2>
           <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
             Suivi animal en 1 scan. 
             <br className="md:hidden" />
@@ -16,7 +15,6 @@ export const HomePage = () => {
           </p>
         </div>
 
-        {/* CTA */}
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl max-w-md mx-auto mb-12">
           <div className="flex items-center justify-center gap-4 mb-6 p-4 bg-linear-to-r from-green-50 to-emerald-50 rounded-2xl">
             <div className="w-16 h-16 bg-linear-to-r from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center">
@@ -35,7 +33,6 @@ export const HomePage = () => {
           </Link>
         </div>
 
-        {/* Features */}
         <div className="grid md:grid-cols-3 gap-8 mt-24">
           <div className="text-left p-8 bg-white/70 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all">
             <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">

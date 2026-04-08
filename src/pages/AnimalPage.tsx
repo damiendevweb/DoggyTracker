@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useReverseGeocoding } from '../hooks/useReverseGeocoding'
@@ -193,15 +193,13 @@ export const AnimalPage = () => {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center p-8 max-w-md">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                    <h2 className="text-4xl font-bold text-gray-900 mb-4">
                         🐶 {normalizedAnimalId}
-                    </h1>
+                    </h2>
                     <p className="text-xl text-gray-500 mb-8">{error || 'Animal introuvable'}</p>
                     <p className="text-sm text-gray-400">
                         Vérifier l'ID ou{' '}
-                        <a href="/" className="underline hover:opacity-70 font-medium">
-                            retourner au dashboard
-                        </a>
+                        <Link to="/" className="underline hover:opacity-70 font-medium">retourner sur la page d'accueil</Link>
                     </p>
                 </div>
             </div>
@@ -216,9 +214,9 @@ export const AnimalPage = () => {
                         <span className="text-3xl font-bold text-white">🐕</span>
                     </div>
 
-                    <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4">
                         Fiche {normalizedAnimalId}
-                    </h1>
+                    </h2>
 
                     <p className="text-xl text-gray-700 mb-6 leading-relaxed">
                         La fiche de ce chien <strong>n'est pas encore remplie</strong>.<br />
@@ -280,7 +278,7 @@ export const AnimalPage = () => {
                         {animal.id}
                     </span>
                     <div className='bg-white p-6 rounded-xl shadow-sm mb-8'>
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">{animal.nom}</h1>
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2">{animal.nom}</h2>
                         <p className="text-xl text-gray-600">{animal.race}</p>
                     </div>
 
