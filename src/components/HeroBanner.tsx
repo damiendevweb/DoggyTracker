@@ -7,7 +7,7 @@ export const HeroBanner = () => {
                     <img className='object-cover w-full h-full' src={herobanner_visual} alt="Hero Banner" />
                 </div>
                     <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center '>
-                        <h2 className='text-lg md:text-2xl lg:text-3xl font-bold'>Où est Médor, la médaille intelligente dont a besoin votre animal de compagnie.</h2>
+                        <h2 className='text-lg md:text-2xl lg:text-3xl font-bold'>Où est Médor, la médaille intelligente dont votre animal de compagnie a besoin.</h2>
                         <a className='' href='#'>Nos produits</a>
                     </div>
             </section>

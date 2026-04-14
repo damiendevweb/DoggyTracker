@@ -10,6 +10,7 @@ import { ResetPasswordPage } from './pages/ResetPagePassword'
 import { NavigationBar } from './components/NavigationBar'
 import { ProfilePage } from './pages/Profile'
 import { Footer } from './components/Footer'
+import { Contact } from './pages/Contact'
 
 function App() {
   const { user, loading } = useAuth()
@@ -38,6 +39,7 @@ function App() {
           element={user ? <ProfilePage /> : <Navigate to="/login" />}
         />
         <Route path='generate-qr-code' element={<GenerateQR />} />
+        <Route path='contact' element={<Contact />} />
 
         <Route path="/:animalId" element={<AnimalPage />} />
 

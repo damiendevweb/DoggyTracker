@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { FaqAccordion } from '../components/FAQ'
 import { HeroBanner } from '../components/HeroBanner'
+import { BlogSection } from '../components/BlogSection'
 
 export const HomePage = () => {
   return (
@@ -64,6 +65,9 @@ export const HomePage = () => {
         <section className="faq__container max-w-4xl mx-auto px-6 py-24">
           <h3>Foire aux questions</h3>
           <FaqAccordion />
+        </section>
+        <section className="blog-section__container">
+          <BlogSection />
         </section>
       </div>
     </>
