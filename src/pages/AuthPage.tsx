@@ -67,76 +67,112 @@ export const AuthPage = () => {
     }, [user]);
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-sm mx-auto p-6 border rounded-lg shadow-md">
-            <h3 className="text-2xl font-bold text-center mb-6">
-                {isSignUp ? 'Inscription' : 'Connexion'}
-            </h3>
+        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 flex-1">
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                {/* <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" className="mx-auto h-10 w-auto" /> */}
+                <h2 className="text-center text-2xl/9 font-bold tracking-tight text-black">{isSignUp ? 'Inscription' : 'Connexion'}</h2>
+            </div>
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {isSignUp && (
+                        <>
+                            <div>
+                                <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Prénom</label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Prénom"
+                                        value={prenom}
+                                        onChange={e => setPrenom(e.target.value)}
+                                        className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">ID de l'animal</label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        placeholder="ID de l'animal (ex: B7M2X)"
+                                        value={animalId}
+                                        onChange={e => setAnimalId(e.target.value.toUpperCase())}
+                                        maxLength={5}
+                                        className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
 
-            {isSignUp && (
-                <>
-                    <input
-                        type="text"
-                        placeholder="Prénom"
-                        value={prenom}
-                        onChange={e => setPrenom(e.target.value)}
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                    <input
-                        type="text"
-                        placeholder="ID animal (ex: B7M2X)"
-                        value={animalId}
-                        onChange={e => setAnimalId(e.target.value.toUpperCase())}
-                        maxLength={5}
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase tracking-wider font-mono"
-                        required
-                    />
-                </>
-            )}
 
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
-                required
-            />
+                    <div>
+                        <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Adresse Email</label>
+                        <div className="mt-2">
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
+                                required
+                            />
+                        </div>
+                    </div>
 
-            <input
-                type="password"
-                placeholder="Mot de passe (6+ caractères)"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
-                minLength={6}
-                required
-            />
-            <button
-            type="button"
-            onClick={handleForgotPassword}
-            className="text-sm text-blue-600 underline hover:text-blue-800 text-left"
-            >
-            Mot de passe oublié ?
-            </button>
 
-            {info && <p className="text-green-600 text-sm p-2 bg-green-50 rounded">{info}</p>}
-            {error && <p className="text-red-500 text-sm p-2 bg-red-50 rounded">{error}</p>}
 
-            <button
-                type="submit"
-                className="bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-                {isSignUp ? "Créer mon compte" : 'Se connecter'}
-            </button>
+                    <div>
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Mot de passe</label>
+                            <div className="text-sm">
+                                <button
+                                    type="button"
+                                    onClick={handleForgotPassword}
+                                    className="font-semibold text-dark-grey hover:opacity-80 underline"
+                                >
+                                    Mot de passe oublié ?
+                                </button>
+                            </div>
+                        </div>
+                        <div className='mt-2'>
 
-            <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm text-gray-500 underline hover:text-gray-700"
-            >
-                {isSignUp ? 'Déjà un compte ? Se connecter' : "Pas de compte ? S'inscrire"}
-            </button>
-        </form>
+                            <input
+                                type="password"
+                                placeholder="Mot de passe (6+ caractères)"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
+                                minLength={6}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {info && <p className="text-green-600 text-sm p-2 bg-green-50 rounded">{info}</p>}
+                    {error && <p className="text-red-500 text-sm p-2 bg-red-50 rounded">{error}</p>}
+
+                    <div>
+                        <button
+                            type="submit"
+                            className="flex w-full justify-center rounded-md bg-yellow-150 px-3 py-1.5 text-sm/6 font-semibold text-dark-grey hover:bg-yellow-150/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-150"
+                        >
+                            {isSignUp ? "Créer mon compte" : 'Se connecter'}
+                        </button>
+                    </div>
+
+
+
+                    <button
+                        type="button"
+                        onClick={() => setIsSignUp(!isSignUp)}
+                        className="text-sm text-gray-500 underline hover:text-gray-700 block m-auto"
+                    >
+                        {isSignUp ? 'Déjà un compte ? Se connecter' : "Pas de compte ? S'inscrire"}
+                    </button>
+                </form>
+            </div>
+        </div>
     )
 }

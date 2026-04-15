@@ -24,7 +24,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-light-grey">
+    <div className="min-h-screen bg-light-grey flex flex-col">
       <NavigationBar />
 
       <Routes>

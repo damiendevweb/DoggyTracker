@@ -27,7 +27,7 @@ export const useAuth = () => {
       .eq('id', animalId)
       .single()
 
-    if (!animal) throw new Error('ID animal invalide')
+    if (!animal) throw new Error('ID de l\'animal invalide')
     if (animal.user_id) throw new Error('Cet animal est déjà lié à un compte')
 
     const { data, error } = await supabase.auth.signUp({
