@@ -5,6 +5,18 @@ import EnablePushButton from '../components/EnablePushButton'
 import TestPushButton from '../components/TestPushButton'
 import SidebarProfile from '../components/SidebarProfile'
 
+type ScanEvent = {
+    id: string
+    created_at: string
+    meta: {
+        address?: string
+        latitude?: number
+        longitude?: number
+        userAgent?: string
+        path?: string
+    } | null
+}
+
 type Animal = {
     id: string
     nom: string
@@ -29,6 +41,9 @@ export const Dashboard = () => {
     const [editing, setEditing] = useState(false)
     const [formData, setFormData] = useState<Partial<Animal>>({})
     const { display: ageDisplay } = useAge(formData.birth_date)
+    const [scans, setScans] = useState<ScanEvent[]>([])
+    const [scansLoading, setScansLoading] = useState(true)
+    const [historyOpen, setHistoryOpen] = useState(false)
 
     const fetchAnimal = async () => {
         const { data: { user } } = await supabase.auth.getUser()
@@ -69,6 +84,24 @@ export const Dashboard = () => {
     useEffect(() => {
         fetchAnimal()
     }, [])
+
+    useEffect(() => {
+        if (!animal?.id) return
+
+        const fetchScans = async () => {
+            setScansLoading(true)
+            const { data } = await supabase
+                .from('animal_access_events')
+                .select('id, created_at, meta')
+                .eq('animal_id', animal.id)
+                .order('created_at', { ascending: false })
+
+            setScans(data ?? [])
+            setScansLoading(false)
+        }
+
+        void fetchScans()
+    }, [animal?.id])
 
     useEffect(() => {
         if (animal && editing) {
@@ -265,6 +298,68 @@ export const Dashboard = () => {
                                     </>
                                 )}
                             </div>
+                        </div>
+
+                        {/* Scan history */}
+                        <div className="border border-border rounded mb-6">
+                            <button
+                                type="button"
+                                onClick={() => setHistoryOpen(!historyOpen)}
+                                className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium text-text-primary hover:bg-bg-hover transition-colors"
+                            >
+                                <span>Historique de scans</span>
+                                <svg
+                                    className={`w-4 h-4 shrink-0 text-text-muted transition-transform duration-200 ${historyOpen ? 'rotate-180' : ''}`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            {historyOpen && (
+                                <div className="border-t border-border">
+                                    {scansLoading ? (
+                                        <div className="px-5 py-6 text-center text-xs text-text-muted">
+                                            Chargement...
+                                        </div>
+                                    ) : scans.length === 0 ? (
+                                        <div className="px-5 py-6 text-center text-xs text-text-muted">
+                                            Aucun scan enregistré pour le moment.
+                                        </div>
+                                    ) : (
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm">
+                                                <thead>
+                                                    <tr className="border-b border-border">
+                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Date</th>
+                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Heure</th>
+                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Adresse</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {scans.map((scan) => {
+                                                        const d = new Date(scan.created_at)
+                                                        const date = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                                                        const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                                                        const address = scan.meta?.address ?? null
+                                                        return (
+                                                            <tr key={scan.id} className="border-b border-border last:border-0 hover:bg-bg-hover transition-colors">
+                                                                <td className="px-5 py-3 text-xs text-text-primary">{date}</td>
+                                                                <td className="px-5 py-3 text-xs text-text-primary">{time}</td>
+                                                                <td className="px-5 py-3 text-xs text-text-secondary">
+                                                                    {address || <span className="text-text-muted italic">Non communiquée</span>}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <div className="space-y-4">
