@@ -9,8 +9,10 @@ import { GenerateQR } from './pages/GenerateQR'
 import { ResetPasswordPage } from './pages/ResetPagePassword'
 import { ScrollToTop } from './components/ScrollToTop'
 import { NavigationBar } from './components/NavigationBar'
+import { TopInfoBanner } from './components/TopInfoBanner'
 import { ProfilePage } from './pages/Profile'
 import { Footer } from './components/Footer'
+import { PWAInstallPrompt } from './components/PWAInstallPrompt'
 import { Contact } from './pages/Contact'
 import { ProductList } from './pages/ProductsList'
 import { ProductPage } from './pages/ProductPage'
@@ -32,6 +34,7 @@ function App() {
   return (
     <div className="min-h-screen bg-light-grey flex flex-col">
       <ScrollToTop />
+      <TopInfoBanner />
       <NavigationBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -57,6 +60,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
+      <PWAInstallPrompt />
       <Footer />
     </div>
   )
