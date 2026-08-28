@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { reverseGeocode } from '../lib/reverse-geocoding'
 import { useGeolocation } from '../hooks/useGeolocation'
-import { useReverseGeocoding } from '../hooks/useReverseGeocoding'
 import { useAge } from '../hooks/useAge'
 
 type Animal = {
@@ -31,25 +31,20 @@ type AccessMeta = {
     address?: string
 }
 
+const SCAN_COOLDOWN_MS = 30_000
+const LOCATION_TIMEOUT_MS = 8_000
+
 export const AnimalPage = () => {
     const { animalId } = useParams<{ animalId: string }>()
     const [animal, setAnimal] = useState<Animal | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [formData,] = useState<Partial<Animal>>({})
+    const hasSentAccessEvent = useRef(false)
 
     const { display: ageDisplay } = useAge(formData.birth_date)
 
-    const {
-        latitude: lat,
-        longitude: lng,
-        getLocation,
-        error: geoError,
-    } = useGeolocation()
-
-    const {
-        address,
-    } = useReverseGeocoding(lat ?? null, lng ?? null)
+    const { getLocationPromise } = useGeolocation()
 
     const normalizedAnimalId = animalId?.toUpperCase() ?? ''
     const isFicheEmpty = animal && (!animal.nom || animal.nom.trim() === '')
@@ -62,7 +57,7 @@ export const AnimalPage = () => {
             const now = Date.now()
             const last = sessionStorage.getItem(key)
 
-            if (last && now - Number(last) < 2 * 60 * 1000) return
+            if (last && now - Number(last) < SCAN_COOLDOWN_MS) return
 
             const { error } = await supabase.from('animal_access_events').insert({
                 animal_id: id,
@@ -81,10 +76,6 @@ export const AnimalPage = () => {
             console.error('Erreur logAnimalAccess:', e)
         }
     }
-
-    useEffect(() => {
-        void getLocation()
-    }, [getLocation])
 
     useEffect(() => {
         if (!normalizedAnimalId) return
@@ -123,56 +114,59 @@ export const AnimalPage = () => {
     useEffect(() => {
         if (!animal?.id) return
         if (typeof window === 'undefined') return
+        if (hasSentAccessEvent.current) return
 
         const key = `animal-access:${animal.id}`
         const last = sessionStorage.getItem(key)
         const now = Date.now()
 
-        if (last && now - Number(last) < 2 * 60 * 1000) return
+        if (last && now - Number(last) < SCAN_COOLDOWN_MS) return
+
+        hasSentAccessEvent.current = true
+
+        const baseMeta: AccessMeta = {
+            from: 'url',
+            path: window.location.pathname,
+            userAgent: navigator.userAgent,
+        }
+
+        const resolveLocation = async (): Promise<Pick<AccessMeta, 'latitude' | 'longitude' | 'address'>> => {
+            const geo = await getLocationPromise(LOCATION_TIMEOUT_MS)
+            if (!geo) return {}
+
+            const latlng = { latitude: geo.latitude, longitude: geo.longitude }
+
+            try {
+                const addr = await Promise.race([
+                    reverseGeocode(geo.latitude, geo.longitude),
+                    new Promise<never>((_, reject) =>
+                        setTimeout(() => reject(new Error('timeout')), 4000)
+                    ),
+                ])
+                return { ...latlng, address: addr.shortAddress }
+            } catch {
+                return latlng
+            }
+        }
+
+        const resolveAndSend = async () => {
+            const location = await resolveLocation()
+            if (cancelled) return
+            await logAnimalAccess(animal.id, { ...baseMeta, ...location })
+        }
 
         let cancelled = false
+        void resolveAndSend()
 
-        const sendWithBestAvailableData = async () => {
-            if (cancelled) return
-
-            const meta: AccessMeta = {
-                from: 'url',
-                path: window.location.pathname,
-                userAgent: navigator.userAgent,
-                latitude: lat ?? undefined,
-                longitude: lng ?? undefined,
-                address: address?.shortAddress ?? undefined,
-            }
-
-            await logAnimalAccess(animal.id, meta)
-        }
-
-        if (address?.shortAddress) {
-            void sendWithBestAvailableData()
-            return
-        }
-
-        if (geoError) {
-            void sendWithBestAvailableData()
-            return
-        }
-
-        const timeoutId = window.setTimeout(() => {
-            void sendWithBestAvailableData()
-        }, 4000)
-
-        return () => {
-            cancelled = true
-            window.clearTimeout(timeoutId)
-        }
-    }, [animal?.id, lat, lng, address?.shortAddress, geoError])
+        return () => { cancelled = true }
+    }, [animal?.id, getLocationPromise])
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-light-grey">
+            <div className="min-h-screen flex items-center justify-center bg-bg">
                 <div className="text-center">
-                    <div className="w-14 h-14 rounded-full border-4 border-orange-300 border-t-orange-400 animate-spin mx-auto mb-4" />
-                    <p className="text-text-secondary">Chargement de {normalizedAnimalId}</p>
+                    <div className="w-8 h-8 rounded-full border-2 border-border border-t-accent animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-text-muted">{normalizedAnimalId}</p>
                 </div>
             </div>
         )
@@ -180,14 +174,14 @@ export const AnimalPage = () => {
 
     if (error || !animal) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-light-grey">
+            <div className="min-h-screen flex items-center justify-center bg-bg">
                 <div className="text-center p-8 max-w-md">
-                    <span className="text-6xl block mb-4">🐶</span>
-                    <h2 className="text-4xl font-bold text-dark-grey mb-2">{normalizedAnimalId}</h2>
-                    <p className="text-lg text-text-secondary mb-6">{error || 'Animal introuvable'}</p>
-                    <p className="text-sm text-text-secondary">
+                    <span className="text-4xl block mb-4">🐶</span>
+                    <h2 className="text-2xl font-bold text-text-primary mb-2" style={{ fontFamily: "'Unbounded', sans-serif" }}>{normalizedAnimalId}</h2>
+                    <p className="text-sm text-text-secondary mb-6">{error || 'Animal introuvable'}</p>
+                    <p className="text-sm text-text-muted">
                         Vérifie l'ID ou{' '}
-                        <Link to="/" className="text-orange-400 hover:underline font-medium">retourne à l'accueil</Link>
+                        <Link to="/" className="text-accent hover:text-accent-hover font-medium">retourne à l'accueil</Link>
                     </p>
                 </div>
             </div>
@@ -196,30 +190,29 @@ export const AnimalPage = () => {
 
     if (isFicheEmpty) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 text-center bg-light-grey">
-                <div className="max-w-md p-8 bg-white rounded-3xl shadow-xl border-t-4 border-yellow-300">
-                    <div className="w-20 h-20 bg-linear-to-r from-orange-400 to-yellow-300 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg">
-                        <span className="text-3xl">🐕</span>
+            <div className="min-h-screen flex flex-col items-center justify-center px-5 py-12 text-center bg-bg">
+                <div className="max-w-md p-8 bg-bg-elevated rounded border border-border">
+                    <div className="w-14 h-14 bg-accent-dim rounded mx-auto mb-5 flex items-center justify-center">
+                        <span className="text-2xl">🐕</span>
                     </div>
-                    <h2 className="text-3xl font-bold text-dark-grey mb-4">
+                    <h2 className="text-xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
                         Fiche {normalizedAnimalId}
                     </h2>
-                    <p className="text-dark-grey mb-4 leading-relaxed">
-                        La fiche de ce chien <strong>n'est pas encore remplie</strong>.<br />
-                        <span className="text-orange-400 font-bold">C'est le vôtre ?</span>
+                    <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+                        La fiche de ce chien <strong className="text-text-primary">n'est pas encore remplie</strong>. C'est le vôtre ?
                     </p>
-                    <div className="bg-orange-100 rounded-2xl p-4 mb-6">
-                        <p className="text-sm font-medium text-dark-grey">
-                            👆 <strong>Inscris-toi</strong> pour remplir sa fiche complète
+                    <div className="bg-bg-surface rounded p-3 mb-6 border border-border">
+                        <p className="text-xs font-medium text-text-secondary">
+                            Inscris-toi pour remplir sa fiche complète
                         </p>
                     </div>
                     <a
                         href={`/login?mode=signup&animal=${normalizedAnimalId}`}
-                        className="inline-block w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all text-center"
+                        className="inline-block w-full bg-accent hover:bg-accent-hover text-bg font-semibold text-sm py-3 px-6 rounded transition-all text-center"
                     >
-                        ✍️ Remplir ma fiche
+                        Remplir ma fiche
                     </a>
-                    <p className="text-xs text-text-secondary mt-6 font-mono bg-light-grey px-3 py-1 rounded-full inline-block">
+                    <p className="text-xs text-text-muted mt-5 bg-bg-surface px-3 py-1 rounded inline-block border border-border">
                         ID: {normalizedAnimalId}
                     </p>
                 </div>
@@ -228,74 +221,74 @@ export const AnimalPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-light-grey py-12">
-            <div className="max-w-2xl mx-auto px-4">
-                <div className="bg-white rounded-3xl shadow-lg overflow-hidden border-t-4 border-orange-300">
-                    <div className="bg-linear-to-r from-orange-400 to-yellow-300 p-8 text-white text-center">
-                        <span className="text-6xl block mb-2">🐾</span>
-                        <h1 className="text-4xl font-bold">{animal.nom}</h1>
-                        <p className="text-white/80 text-lg">{animal.race}</p>
-                        <span className="inline-block mt-3 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-mono">
+        <div className="min-h-screen bg-bg py-12">
+            <div className="max-w-2xl mx-auto px-5">
+                <div className="bg-bg-elevated border border-border overflow-hidden">
+                    <div className="bg-accent p-8 text-bg text-center">
+                        <span className="text-3xl block mb-2">🐾</span>
+                        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Unbounded', sans-serif" }}>{animal.nom}</h1>
+                        <p className="text-bg/80 text-sm mt-1">{animal.race}</p>
+                        <span className="inline-block mt-3 bg-bg/20 rounded px-2.5 py-1 text-xs">
                             {animal.id}
                         </span>
                     </div>
 
-                    <div className="p-6 md:p-8 space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="bg-light-grey rounded-2xl p-5">
-                                <h3 className="font-bold text-dark-grey mb-3 text-sm uppercase tracking-wider">📊 Infos physiques</h3>
+                    <div className="p-6 md:p-8 space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border rounded overflow-hidden">
+                            <div className="bg-bg-elevated p-5">
+                                <h3 className="font-semibold text-text-muted mb-3 text-xs uppercase tracking-wider">Infos physiques</h3>
                                 <div className="space-y-2 text-sm">
-                                    <p className="flex justify-between"><span className="text-text-secondary">Âge</span><span className="font-medium text-dark-grey">{ageDisplay}</span></p>
-                                    <p className="flex justify-between"><span className="text-text-secondary">Poids</span><span className="font-medium text-dark-grey">{animal.poids} kg</span></p>
+                                    <p className="flex justify-between"><span className="text-text-muted">Âge</span><span className="font-medium text-text-primary">{ageDisplay}</span></p>
+                                    <p className="flex justify-between"><span className="text-text-muted">Poids</span><span className="font-medium text-text-primary">{animal.poids} kg</span></p>
                                 </div>
                             </div>
 
-                            <div className="bg-light-grey rounded-2xl p-5">
-                                <h3 className="font-bold text-dark-grey mb-3 text-sm uppercase tracking-wider">👥 Compatibilités</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium ${animal.ok_congenere ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'}`}>
+                            <div className="bg-bg-elevated p-5">
+                                <h3 className="font-semibold text-text-muted mb-3 text-xs uppercase tracking-wider">Compatibilités</h3>
+                                <div className="flex flex-wrap gap-1.5">
+                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium border ${animal.ok_congenere ? 'bg-success/10 text-success border-success/20' : 'bg-bg-surface text-text-muted border-border'}`}>
                                         {animal.ok_congenere ? '✓ Congénères' : '✗ Congénères'}
                                     </span>
-                                    <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium ${animal.ok_enfants ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'}`}>
+                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium border ${animal.ok_enfants ? 'bg-success/10 text-success border-success/20' : 'bg-bg-surface text-text-muted border-border'}`}>
                                         {animal.ok_enfants ? '✓ Enfants' : '✗ Enfants'}
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-light-grey rounded-2xl p-5">
-                            <h3 className="font-bold text-dark-grey mb-3 text-sm uppercase tracking-wider">📞 Contacts</h3>
+                        <div className="bg-bg-elevated rounded border border-border p-5">
+                            <h3 className="font-semibold text-text-muted mb-3 text-xs uppercase tracking-wider">Contacts</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p className="text-text-secondary text-xs">Propriétaire</p>
-                                    <p className="font-medium text-dark-grey">{animal.prenom_proprietaire}</p>
+                                    <p className="text-text-muted text-xs">Propriétaire</p>
+                                    <p className="font-medium text-text-primary">{animal.prenom_proprietaire}</p>
                                 </div>
                                 <div>
-                                    <p className="text-text-secondary text-xs">Téléphone</p>
+                                    <p className="text-text-muted text-xs">Téléphone</p>
                                     <p className="font-medium">
-                                        <a href={`tel:${animal.telephone_1}`} className="text-orange-400 hover:underline">
+                                        <a href={`tel:${animal.telephone_1}`} className="text-accent hover:text-accent-hover">
                                             {animal.telephone_1}
                                         </a>
                                         {animal.telephone_2 && (
-                                            <> · <a href={`tel:${animal.telephone_2}`} className="text-orange-400 hover:underline opacity-80">{animal.telephone_2}</a></>
+                                            <> · <a href={`tel:${animal.telephone_2}`} className="text-accent hover:text-accent-hover opacity-80">{animal.telephone_2}</a></>
                                         )}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-text-secondary text-xs">Email</p>
+                                    <p className="text-text-muted text-xs">Email</p>
                                     <p className="font-medium">
-                                        <a href={`mailto:${animal.mail_1}`} className="text-orange-400 hover:underline">
+                                        <a href={`mailto:${animal.mail_1}`} className="text-accent hover:text-accent-hover">
                                             {animal.mail_1}
                                         </a>
                                         {animal.mail_2 && (
-                                            <> · <a href={`mailto:${animal.mail_2}`} className="text-orange-400 hover:underline opacity-80">{animal.mail_2}</a></>
+                                            <> · <a href={`mailto:${animal.mail_2}`} className="text-accent hover:text-accent-hover opacity-80">{animal.mail_2}</a></>
                                         )}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-text-secondary text-xs">Vétérinaire</p>
+                                    <p className="text-text-muted text-xs">Vétérinaire</p>
                                     <p className="font-medium">
-                                        <a href={`tel:${animal.telephone_veterinaire}`} className="text-orange-400 hover:underline">
+                                        <a href={`tel:${animal.telephone_veterinaire}`} className="text-accent hover:text-accent-hover">
                                             {animal.telephone_veterinaire}
                                         </a>
                                     </p>

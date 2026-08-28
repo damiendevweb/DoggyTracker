@@ -1,6 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700&display=swap");
 
 @import "tailwindcss";
 @plugin '@tailwindcss/forms';
@@ -13,11 +12,13 @@ body,
 
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: "Albert Sans", sans-serif;
+  color: #3d5a47;
+  background-color: #f6fff8;
 }
-h1,
-h2 {
-  font-family: "DM Serif Display", serif;
+
+h1 {
+  font-family: "Unbounded", sans-serif;
 }
 
 button:not(:disabled),
@@ -25,117 +26,80 @@ button:not(:disabled),
   cursor: pointer;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes bounce-soft {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes wag {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-8deg);
-  }
-  75% {
-    transform: rotate(8deg);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-8px) rotate(2deg);
-  }
-  66% {
-    transform: translateY(4px) rotate(-1deg);
-  }
-}
-
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
-}
+/* ── Animations ── */
 
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-@keyframes paw-print {
-  0% {
-    opacity: 0;
-    transform: scale(0.5) rotate(0deg);
-  }
-  50% {
-    opacity: 0.15;
-    transform: scale(1) rotate(10deg);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.2) rotate(20deg);
-  }
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
 }
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* ── Tailwind v4 theme ── */
 
 @theme {
-  --color-yellow-150: #ffcc01;
-  --color-orange-300: #ff8c42;
-  --color-orange-400: #ff6b35;
-  --color-orange-500: #e85d2c;
-  --color-yellow-200: #fff3b0;
-  --color-yellow-300: #fee440;
-  --color-yellow-400: #f5d000;
-  --color-pink-200: #ffd6e0;
-  --color-pink-300: #ff8fab;
-  --color-pink-400: #ff6b8a;
-  --color-green-200: #b5ead7;
-  --color-green-300: #7ddfb3;
-  --color-green-400: #52c41a;
-  --color-purple-200: #e8d5ff;
-  --color-purple-300: #c084fc;
-  --color-brown-200: #d4a574;
-  --color-brown-300: #b8864e;
-  --color-dark-grey: #2d3436;
-  --color-light-grey: #fff8f0;
+  /* Sage green palette */
+  --color-sage-50: #f6fff8;
+  --color-sage-100: #eaf4f4;
+  --color-sage-200: #cce3de;
+  --color-sage-300: #a4c3b2;
+  --color-sage-400: #6b9080;
+  --color-sage-500: #6b9080;
+  --color-sage-600: #5a7d6d;
+  --color-sage-700: #6b9080;
+  --color-sage-800: #4a6e58;
+  --color-sage-900: #3d5a47;
+
+  /* Semantic tokens */
+  --color-bg: #f6fff8;
+  --color-bg-elevated: #ffffff;
+  --color-bg-surface: #eaf4f4;
+  --color-bg-hover: #cce3de;
+  --color-border: #cce3de;
+  --color-border-strong: #a4c3b2;
+
+  --color-text-primary: #3d5a47;
+  --color-text-secondary: #6b9080;
+  --color-text-muted: #a4c3b2;
+
+  --color-accent: #6b9080;
+  --color-accent-hover: #5a7d6d;
+  --color-accent-dim: rgba(107, 144, 128, 0.1);
+
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+
+  /* Legacy aliases */
+  --color-dark-grey: #3d5a47;
+  --color-light-grey: #f6fff8;
   --color-card: #ffffff;
-  --color-text-secondary: #636e72;
+
+  --color-orange-300: #6b9080;
+  --color-orange-400: #6b9080;
+  --color-orange-500: #5a7d6d;
+  --color-yellow-150: #eaf4f4;
+  --color-yellow-200: #cce3de;
+  --color-yellow-300: #6b9080;
+  --color-yellow-400: #5a7d6d;
+  --color-pink-200: #eaf4f4;
+  --color-pink-300: #6b9080;
+  --color-pink-400: #6b9080;
+  --color-green-200: #eaf4f4;
+  --color-green-300: #22c55e;
+  --color-green-400: #22c55e;
+  --color-purple-200: #eaf4f4;
+  --color-purple-300: #6b9080;
+  --color-brown-200: #eaf4f4;
+  --color-brown-300: #6b9080;
 }

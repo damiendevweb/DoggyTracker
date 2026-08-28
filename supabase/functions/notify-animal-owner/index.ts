@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
                   const now = Date.now()
                   const diffMs = now - last
 
-                  if (diffMs < 2 * 60 * 1000) {
+                  if (diffMs < 30 * 1000) {
                         return new Response(JSON.stringify({ ok: true, skipped: 'Rate limited' }), {
                               status: 200,
                               headers: corsHeaders,

@@ -11,11 +11,7 @@ export const ResetPasswordPage = () => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event) => {
-        if (event !== 'PASSWORD_RECOVERY') {
-          // on laisse quand même l'user définir un nouveau mdp si le lien est valide
-        }
-      }
+      () => {}
     );
     return () => subscription.unsubscribe();
   }, []);
@@ -45,45 +41,41 @@ export const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 flex-1">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="text-center text-2xl/9 font-bold tracking-tight text-black">Nouveau mot de passe</h2>
-      </div>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6"
-        >
+    <div className="flex min-h-screen flex-col justify-center items-center px-5 py-16 bg-bg">
+      <div className="w-full max-w-sm">
+        <h1 className="text-xl font-bold text-text-primary text-center mb-8" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+          Nouveau mot de passe
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Nouveau mot de passe</label>
-            <div className="mt-2">
-              <input
-                type="password"
-                placeholder="Nouveau mot de passe"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
-                required
-              />
-            </div>
-            <div className="mt-2">
-              <input
-                type="password"
-                placeholder="Confirmer le mot de passe"
-                value={password2}
-                onChange={e => setPassword2(e.target.value)}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
-                required
-              />
-            </div>
+            <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">Nouveau mot de passe</label>
+            <input
+              type="password"
+              placeholder="Nouveau mot de passe"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              placeholder="Confirmer le mot de passe"
+              value={password2}
+              onChange={e => setPassword2(e.target.value)}
+              className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
+              required
+            />
           </div>
 
-          {error && <p className="text-red-500 text-sm p-2 bg-red-50 rounded">{error}</p>}
-          {info && <p className="text-green-600 text-sm p-2 bg-green-50 rounded">{info}</p>}
+          {error && <p className="text-error text-xs p-3 bg-error/10 rounded">{error}</p>}
+          {info && <p className="text-success text-xs p-3 bg-success/10 rounded">{info}</p>}
 
           <button
             type="submit"
-            className="flex w-full justify-center rounded-md bg-yellow-150 px-3 py-1.5 text-sm/6 font-semibold text-dark-grey hover:bg-yellow-150/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-150 transition-colors"
+            className="w-full bg-accent hover:bg-accent-hover text-bg font-semibold text-sm px-4 py-2.5 rounded transition-colors"
           >
             Mettre à jour le mot de passe
           </button>

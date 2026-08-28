@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import SidebarProfile from '../components/SidebarProfile'
 import { supabase } from '../lib/supabase'
+import SidebarProfile from '../components/SidebarProfile'
 
 type ProfileData = {
   prenom: string
@@ -44,37 +44,34 @@ export const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        Chargement du profil...
+      <div className="flex min-h-screen items-center justify-center bg-bg">
+        <p className="text-sm text-text-muted">Chargement...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="rounded-xl bg-red-50 p-4 text-red-600">{error}</div>
+      <div className="p-5 bg-bg min-h-screen">
+        <div className="rounded bg-error/10 border border-error/20 p-4 text-sm text-error">{error}</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 md:flex">
+    <div className="min-h-screen bg-bg md:flex">
       <SidebarProfile />
-
       <main className="flex-1 p-6 md:p-10">
-        <div className="mx-auto max-w-3xl rounded-2xl border bg-white p-8 shadow-sm">
-          <h1 className="mb-6 text-2xl font-semibold text-slate-900">Mon profil</h1>
-
-          <div className="grid gap-4">
-            <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-sm text-slate-500">Prénom</p>
-              <p className="text-base font-medium text-slate-900">{profile?.prenom || '—'}</p>
+        <div className="mx-auto max-w-2xl bg-bg-elevated border border-border rounded p-8">
+          <h1 className="mb-6 text-xl font-bold text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>Mon profil</h1>
+          <div className="space-px bg-border rounded overflow-hidden">
+            <div className="bg-bg-surface p-4">
+              <p className="text-[10px] text-text-muted uppercase tracking-wider">Prénom</p>
+              <p className="text-sm font-medium text-text-primary mt-1">{profile?.prenom || '—'}</p>
             </div>
-
-            <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-sm text-slate-500">Email</p>
-              <p className="text-base font-medium text-slate-900">{profile?.email || '—'}</p>
+            <div className="bg-bg-surface p-4">
+              <p className="text-[10px] text-text-muted uppercase tracking-wider">Email</p>
+              <p className="text-sm font-medium text-text-primary mt-1">{profile?.email || '—'}</p>
             </div>
           </div>
         </div>

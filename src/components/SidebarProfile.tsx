@@ -4,33 +4,27 @@ import { useAuth } from '../hooks/useAuth'
 export default function SidebarProfile() {
   const location = useLocation()
   const { signOut } = useAuth()
-    
+
   const linkClass = (path: string) =>
-    `block rounded-xl px-4 py-3 text-sm font-medium transition ${
+    `block px-3 py-2 text-xs font-medium transition-colors rounded ${
       location.pathname === path
-        ? 'bg-slate-900 text-white'
-        : 'text-slate-700 hover:bg-slate-100'
+        ? 'bg-accent text-bg'
+        : 'text-text-secondary hover:text-text-primary hover:bg-bg-hover'
     }`
 
   return (
-    <aside className="w-full border-r bg-white p-4 md:min-h-screen md:w-72">
-      <nav className="space-y-2" aria-label="Navigation profil">
+    <aside className="w-full border-r border-border bg-bg-elevated p-4 md:min-h-screen md:w-56">
+      <nav className="space-y-0.5" aria-label="Navigation profil">
         <Link to="/profile" className={linkClass('/profile')}>
           Mon profil
         </Link>
-
-        <Link to="/profile/achats" className={linkClass('/profile/achats')}>
-          Mes achats
-        </Link>
-
         <Link to="/dashboard" className={linkClass('/dashboard')}>
           Mon animal
         </Link>
-
         <button
           type="button"
           onClick={signOut}
-          className="block w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+          className="block w-full px-3 py-2 text-left text-xs font-medium text-error rounded hover:bg-error/10 transition-colors"
         >
           Déconnexion
         </button>

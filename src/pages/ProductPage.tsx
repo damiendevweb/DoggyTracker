@@ -52,50 +52,57 @@ export const ProductPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-light-grey flex items-center justify-center">
-                <p className="text-lg text-text-secondary">Chargement du produit...</p>
+            <div className="min-h-screen bg-bg flex items-center justify-center">
+                <p className="text-sm text-text-muted">Chargement...</p>
             </div>
         )
     }
 
     if (error) {
         return (
-            <div className="min-h-screen bg-light-grey flex items-center justify-center">
-                <p className="text-lg text-red-500">{error}</p>
+            <div className="min-h-screen bg-bg flex items-center justify-center">
+                <p className="text-sm text-error">{error}</p>
             </div>
         )
     }
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-light-grey flex items-center justify-center">
-                <p className="text-lg text-text-secondary">Produit introuvable.</p>
+            <div className="min-h-screen bg-bg flex items-center justify-center">
+                <p className="text-sm text-text-muted">Produit introuvable.</p>
             </div>
         )
     }
 
     const accordionItems = [
         ...(product.description
-            ? [{ name: 'description', label: 'Description', content: <p>{product.description}</p> }]
+            ? [{ name: 'description', label: 'Description', content: <p className="text-sm text-text-secondary">{product.description}</p> }]
             : []),
         {
             name: 'caracteristiques',
             label: 'Caractéristiques',
             content: (
-                <ul className="space-y-2">
-                    <li className="flex justify-between"><span>Marque</span><span className="font-medium text-dark-grey">Parfs</span></li>
-                    <li className="flex justify-between"><span>Collection</span><span className="font-medium text-dark-grey">2022</span></li>
-                    <li className="flex justify-between"><span>Référence</span><span className="font-medium text-dark-grey">G480745</span></li>
-                    <li className="flex justify-between"><span>Matériau</span><span className="font-medium text-dark-grey">Acier inoxydable</span></li>
-                    <li className="flex justify-between"><span>Diamètre</span><span className="font-medium text-dark-grey">30 mm</span></li>
-                </ul>
+                <div className="space-y-px bg-border rounded overflow-hidden">
+                    {[
+                        { label: 'Marque', value: 'Parfs' },
+                        { label: 'Collection', value: '2022' },
+                        { label: 'Référence', value: 'G480745' },
+                        { label: 'Matériau', value: 'Acier inoxydable' },
+                        { label: 'Diamètre', value: '30 mm' },
+                    ].map((row) => (
+                        <div key={row.label} className="bg-bg-elevated grid grid-cols-2 gap-4 px-4 py-2.5">
+                            <span className="text-xs text-text-muted">{row.label}</span>
+                            <span className="text-xs text-text-primary font-medium text-right">{row.value}</span>
+                        </div>
+                    ))}
+                </div>
             ),
         },
         {
             name: 'paiement',
-            label: 'Payment & delivery',
+            label: 'Paiement & livraison',
             content: (
-                <div className="space-y-2">
+                <div className="space-y-2 text-xs text-text-secondary">
                     <p>Paiement sécurisé par carte bancaire (Stripe).</p>
                     <p>Livraison offerte en France métropolitaine sous 5-7 jours ouvrés.</p>
                 </div>
@@ -104,23 +111,25 @@ export const ProductPage = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-white">
-            <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-                <div className="lg:grid lg:gap-16 lg:grid-cols-2 lg:items-start">
-
+        <div className="min-h-screen bg-bg">
+            <div className="max-w-6xl mx-auto px-5 py-10">
+                <div className="lg:grid lg:gap-10 lg:grid-cols-2 lg:items-start">
                     <ProductImageGallery images={sortedImages} productName={product.name} />
 
-                    <div className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-6 mt-8 lg:mt-0">
                         <div>
-                            <p className="text-xs tracking-[0.3em] text-text-secondary uppercase mb-3">Médaille connectée</p>
-                            <h1 className="text-4xl md:text-5xl text-dark-grey" style={{ fontFamily: "'DM Serif Display', serif" }}>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-[10px] font-semibold text-accent uppercase tracking-widest">Médaille connectée</span>
+                                <div className="flex-1 h-px bg-border" />
+                            </div>
+                            <h1 className="text-2xl md:text-3xl text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>
                                 {product.name}
                             </h1>
-                            <p className="mt-4 text-2xl font-bold text-dark-grey">
+                            <p className="mt-2 text-lg font-bold text-accent">
                                 {formatPrice(product.price_cents)}
                             </p>
                             {product.description && (
-                                <p className="mt-5 text-sm text-text-secondary leading-relaxed max-w-md">
+                                <p className="mt-3 text-sm text-text-secondary leading-relaxed max-w-md">
                                     {product.description}
                                 </p>
                             )}
@@ -153,62 +162,29 @@ export const ProductPage = () => {
                 </div>
             </div>
 
-            <section className="py-24 text-center">
-                <div className="mx-auto max-w-3xl px-4 mb-12">
-                    <h2 className="text-3xl md:text-5xl text-dark-grey mb-6" style={{ fontFamily: "'DM Serif Display', serif" }}>A bold burst of identity.</h2>
-                    <p className="text-sm text-text-secondary leading-relaxed max-w-xl mx-auto">
-                        Au cœur de ce médaillon, un QR code unique, prêt à transmettre ton identité à la personne qui le scanne.
+            {/* QR Code section */}
+            <section className="bg-bg-elevated border-y border-border py-20">
+                <div className="max-w-4xl mx-auto px-5 text-center">
+                    <div className="flex items-center gap-3 mb-10">
+                        <span className="text-[10px] font-semibold text-accent uppercase tracking-widest">Technologie</span>
+                        <div className="flex-1 h-px bg-border" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                        Un QR Code, des retrouvailles
+                    </h2>
+                    <p className="text-sm text-text-secondary leading-relaxed max-w-xl mx-auto mb-10">
+                        Au cœur de ce médaillon, un QR code unique, prêt à transmettre l'identité de votre animal.
                     </p>
-                </div>
-                <div className="relative w-full max-w-4xl mx-auto aspect-video overflow-hidden bg-orange-100 flex items-center justify-center">
-                    <div className="relative flex items-center justify-center w-72 h-72">
-                        <div className="absolute inset-0 rounded-full bg-linear-to-br from-orange-200 via-yellow-100 to-orange-300 border-[6px] border-orange-300/60" />
-                        <div className="absolute inset-3 rounded-full bg-linear-to-b from-orange-100/80 to-orange-200/40" />
-                        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full border-[3px] border-orange-300/70 bg-orange-100/50" />
-                        <img
-                            src="https://izugqskkkniyybedqoem.supabase.co/storage/v1/object/public/qr-code/qr-ZCRBZ.png"
-                            alt="QR code médaillon"
-                            className="relative w-44 h-44 mix-blend-multiply"
-                        />
+                    <div className="bg-bg-surface border border-border p-8 inline-flex items-center justify-center">
+                        <div className="relative flex items-center justify-center w-48 h-48">
+                            <img
+                                src="https://izugqskkkniyybedqoem.supabase.co/storage/v1/object/public/qr-code/qr-ZCRBZ.png"
+                                alt="QR code médaillon"
+                                className="relative w-32 h-32 mix-blend-multiply"
+                            />
+                        </div>
                     </div>
                 </div>
-            </section>
-
-            <section className="py-20">
-                <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-2 gap-12 items-center">
-                    {sortedImages[0] && (
-                        <img
-                            src={sortedImages[0].image_url}
-                            alt={product.name}
-                            className="aspect-square w-full object-cover"
-                        />
-                    )}
-                    <div className="text-center md:text-left">
-                        <h3 className="text-2xl md:text-3xl text-dark-grey mb-6 leading-tight" style={{ fontFamily: "'DM Serif Display', serif" }}>
-                            Enhances the bond between you and your pet.
-                        </h3>
-                        <p className="text-sm text-text-secondary leading-relaxed mb-8">
-                            Parfs Médaille instaure un rituel apaisant, comme un rituel parfumé. Un détail pensé pour ne jamais perdre ce qui compte.
-                        </p>
-                        <a href="#personnalisation" className="inline-block text-xs tracking-[0.3em] uppercase text-dark-grey border-b border-dark-grey pb-1 hover:opacity-70">Acquérir</a>
-                    </div>
-                </div>
-            </section>
-
-            <section className="py-24 text-center">
-                <div className="mx-auto max-w-3xl px-4 mb-12">
-                    <h2 className="text-3xl md:text-5xl text-dark-grey mb-6" style={{ fontFamily: "'DM Serif Display', serif" }}>Echo Your Love</h2>
-                    <p className="text-sm text-text-secondary leading-relaxed max-w-xl mx-auto">
-                        Un médaillon qui résonne comme un témoignage d'affection, capturant le lien unique entre toi et ton animal.
-                    </p>
-                </div>
-                {sortedImages[0] && (
-                    <img
-                        src={sortedImages[0].image_url}
-                        alt={product.name}
-                        className="w-full max-w-4xl mx-auto aspect-video object-cover"
-                    />
-                )}
             </section>
         </div>
     )

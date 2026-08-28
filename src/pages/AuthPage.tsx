@@ -49,7 +49,6 @@ export const AuthPage = () => {
         }
     };
 
-
     useEffect(() => {
         const animalParam = searchParams.get('animal');
         const modeParam = searchParams.get('mode');
@@ -60,6 +59,7 @@ export const AuthPage = () => {
             setIsSignUp(true);
         }
     }, [searchParams]);
+
     useEffect(() => {
         if (user) {
             window.location.href = '/dashboard';
@@ -67,102 +67,93 @@ export const AuthPage = () => {
     }, [user]);
 
     return (
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 flex-1">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                {/* <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" className="mx-auto h-10 w-auto" /> */}
-                <h2 className="text-center text-2xl/9 font-bold tracking-tight text-black">{isSignUp ? 'Inscription' : 'Connexion'}</h2>
-            </div>
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex min-h-screen flex-col justify-center items-center px-5 py-16 bg-bg">
+            <div className="w-full max-w-sm">
+                <div className="text-center mb-8">
+                    <span className="text-2xl block mb-3">🐾</span>
+                    <h1 className="text-xl font-bold text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                        {isSignUp ? 'Inscription' : 'Connexion'}
+                    </h1>
+                    <p className="text-xs text-text-secondary mt-2">
+                        {isSignUp ? 'Crée ton compte pour gérer la fiche de ton animal' : 'Connecte-toi à ton espace'}
+                    </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {isSignUp && (
                         <>
                             <div>
-                                <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Prénom</label>
-                                <div className="mt-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Prénom"
-                                        value={prenom}
-                                        onChange={e => setPrenom(e.target.value)}
-                                        className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
-                                        required
-                                    />
-                                </div>
+                                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">Prénom</label>
+                                <input
+                                    type="text"
+                                    placeholder="Prénom"
+                                    value={prenom}
+                                    onChange={e => setPrenom(e.target.value)}
+                                    className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
+                                    required
+                                />
                             </div>
                             <div>
-                                <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">ID de l'animal</label>
-                                <div className="mt-2">
-                                    <input
-                                        type="text"
-                                        placeholder="ID de l'animal (ex: B7M2X)"
-                                        value={animalId}
-                                        onChange={e => setAnimalId(e.target.value.toUpperCase())}
-                                        maxLength={5}
-                                        className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
-                                        required
-                                    />
-                                </div>
+                                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">ID de l'animal</label>
+                                <input
+                                    type="text"
+                                    placeholder="ex: B7M2X"
+                                    value={animalId}
+                                    onChange={e => setAnimalId(e.target.value.toUpperCase())}
+                                    maxLength={5}
+                                    className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted uppercase"
+                                    required
+                                />
                             </div>
                         </>
                     )}
                     <div>
-                        <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Adresse Email</label>
-                        <div className="mt-2">
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
-                                required
-                            />
-                        </div>
+                        <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">Adresse Email</label>
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
+                            required
+                        />
                     </div>
                     <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="password" className="block text-sm/6 font-medium text-dark-grey">Mot de passe</label>
-                            <div className="text-sm">
-                                <button
-                                    type="button"
-                                    onClick={handleForgotPassword}
-                                    className="font-semibold text-dark-grey hover:opacity-80 underline"
-                                >
-                                    Mot de passe oublié ?
-                                </button>
-                            </div>
+                        <div className="flex items-center justify-between mb-1.5">
+                            <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider">Mot de passe</label>
+                            <button
+                                type="button"
+                                onClick={handleForgotPassword}
+                                className="text-[11px] font-medium text-accent hover:text-accent-hover transition-colors"
+                            >
+                                Mot de passe oublié ?
+                            </button>
                         </div>
-                        <div className='mt-2'>
-
-                            <input
-                                type="password"
-                                placeholder="Mot de passe (6+ caractères)"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-dark-grey outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-yellow-150 sm:text-sm/6"
-                                minLength={6}
-                                required
-                            />
-                        </div>
+                        <input
+                            type="password"
+                            placeholder="6+ caractères"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
+                            minLength={6}
+                            required
+                        />
                     </div>
 
-                    {info && <p className="text-green-600 text-sm p-2 bg-green-50 rounded">{info}</p>}
-                    {error && <p className="text-red-500 text-sm p-2 bg-red-50 rounded">{error}</p>}
+                    {info && <p className="text-success text-xs p-3 bg-success/10 rounded">{info}</p>}
+                    {error && <p className="text-error text-xs p-3 bg-error/10 rounded">{error}</p>}
 
-                    <div>
-                        <button
-                            type="submit"
-                            className="flex w-full justify-center rounded-md bg-yellow-150 px-3 py-1.5 text-sm/6 font-semibold text-dark-grey hover:bg-yellow-150/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-150 transition-colors"
-                        >
-                            {isSignUp ? "Créer mon compte" : 'Se connecter'}
-                        </button>
-                    </div>
-
-
+                    <button
+                        type="submit"
+                        className="w-full bg-accent hover:bg-accent-hover text-bg font-semibold text-sm px-4 py-2.5 rounded transition-colors"
+                    >
+                        {isSignUp ? "Créer mon compte" : 'Se connecter'}
+                    </button>
 
                     <button
                         type="button"
                         onClick={() => setIsSignUp(!isSignUp)}
-                        className="text-sm text-gray-500 underline hover:text-gray-700 block m-auto"
+                        className="text-xs text-text-muted hover:text-text-secondary block mx-auto transition-colors"
                     >
                         {isSignUp ? 'Déjà un compte ? Se connecter' : "Pas de compte ? S'inscrire"}
                     </button>

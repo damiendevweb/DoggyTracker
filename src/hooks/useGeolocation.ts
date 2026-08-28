@@ -7,6 +7,8 @@ interface GeoState {
   error?: string
 }
 
+type GeoResult = { latitude: number; longitude: number } | null
+
 export function useGeolocation() {
   const [state, setState] = useState<GeoState>({ loading: false })
 
@@ -36,5 +38,47 @@ export function useGeolocation() {
     )
   }, [])
 
-  return { ...state, getLocation }
+  const getLocationPromise = useCallback((timeoutMs = 8000): Promise<GeoResult> => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve(null)
+        return
+      }
+
+      let settled = false
+
+      const timer = setTimeout(() => {
+        if (!settled) {
+          settled = true
+          resolve(null)
+        }
+      }, timeoutMs)
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          if (!settled) {
+            settled = true
+            clearTimeout(timer)
+            setState({
+              loading: false,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            })
+            resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+          }
+        },
+        () => {
+          if (!settled) {
+            settled = true
+            clearTimeout(timer)
+            setState((prev) => ({ ...prev, loading: false, error: 'Géolocalisation refusée' }))
+            resolve(null)
+          }
+        },
+        { enableHighAccuracy: true, timeout: timeoutMs }
+      )
+    })
+  }, [])
+
+  return { ...state, getLocation, getLocationPromise }
 }

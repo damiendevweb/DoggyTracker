@@ -9,23 +9,23 @@ export const ProductImageGallery = ({ images, productName }: Props) => {
     const [main, ...thumbs] = images
 
     return (
-        <div className="space-y-4 lg:sticky lg:top-27">
+        <div className="space-y-2 lg:sticky lg:top-24">
             {main && (
                 <img
                     src={main.image_url}
                     alt={main.image_alt || productName}
-                    className="aspect-square w-full object-cover"
+                    className="aspect-square w-full object-cover rounded border border-border"
                 />
             )}
 
             {thumbs.length > 0 && (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2">
                     {thumbs.map((image) => (
                         <img
                             key={image.id}
                             src={image.image_url}
                             alt={image.image_alt || productName}
-                            className="aspect-square w-full object-cover"
+                            className="aspect-square w-full object-cover rounded border border-border"
                         />
                     ))}
                 </div>

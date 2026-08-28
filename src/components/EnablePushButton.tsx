@@ -158,11 +158,11 @@ export default function EnablePushButton() {
                     disabled={isUnsubscribing}
                     aria-label="Désactiver les notifications"
                     title="Notifications activées — cliquer pour désactiver"
-                    className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all duration-200 bg-green-400 text-white hover:bg-green-500 active:scale-95 disabled:opacity-50"
+                    className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded bg-success text-bg transition-all duration-200 hover:bg-success/80 active:scale-95 disabled:opacity-50"
                 >
-                    <svg className="relative h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="relative h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2a6 6 0 00-6 6v3.586L4.293 13.293A1 1 0 005 15h14a1 1 0 00.707-1.707L18 11.586V8a6 6 0 00-6-6zm0 20a3 3 0 002.995-2.824L15 19h-6a3 3 0 002.824 2.995L12 22z" />
-                        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                 </button>
             ) : (
@@ -171,9 +171,9 @@ export default function EnablePushButton() {
                     onClick={enablePush}
                     aria-label="Activer les notifications"
                     title="Activer les notifications"
-                    className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all duration-200 bg-orange-400 text-white hover:bg-orange-500 active:scale-95"
+                    className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded bg-accent text-bg transition-all duration-200 hover:bg-accent-hover active:scale-95"
                 >
-                    <svg className="relative h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="relative h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2a6 6 0 00-6 6v3.586L4.293 13.293A1 1 0 005 15h14a1 1 0 00.707-1.707L18 11.586V8a6 6 0 00-6-6zm0 20a3 3 0 002.995-2.824L15 19h-6a3 3 0 002.824 2.995L12 22z" />
                     </svg>
                 </button>
@@ -181,7 +181,7 @@ export default function EnablePushButton() {
 
             {errorMessage && (
                 <div
-                    className="fixed bottom-24 right-6 z-50 max-w-xs rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-lg"
+                    className="fixed bottom-20 right-6 z-50 max-w-xs rounded border border-error/20 bg-error/10 px-4 py-3 text-sm text-error"
                     role="status"
                     aria-live="polite"
                 >

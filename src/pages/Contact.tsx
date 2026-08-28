@@ -1,101 +1,99 @@
 export const Contact = () => {
     return (
-        <div className="min-h-screen bg-light-grey">
-            <div className="relative py-20 overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none">
-                    <span className="absolute top-10 left-[10%] text-5xl opacity-10 animate-float-slow">🐾</span>
-                    <span className="absolute bottom-10 right-[15%] text-4xl opacity-10 animate-float">🐶</span>
-                    <span className="absolute top-1/2 right-[25%] text-3xl opacity-10 animate-float" style={{ animationDelay: '1s' }}>🦴</span>
-                </div>
-                <div className="max-w-4xl mx-auto px-6 text-center relative">
-                    <span className="inline-block text-5xl mb-4">💌</span>
-                    <h1 className="text-4xl md:text-5xl font-bold text-dark-grey mb-4">
-                        On reste en contact ?
-                    </h1>
-                    <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-                        Une question, un doute, une histoire de retrouvailles à partager ? On est là pour vous répondre.
-                    </p>
-                </div>
+        <div className="min-h-screen bg-bg">
+            <div className="max-w-7xl mx-auto px-5 py-6">
+                <nav className="flex items-center gap-2 text-xs text-text-muted">
+                    <a href="/" className="hover:text-text-secondary transition-colors">Accueil</a>
+                    <span>/</span>
+                    <span className="text-text-secondary">Contact</span>
+                </nav>
             </div>
 
-            <div className="max-w-6xl mx-auto px-6 pb-20">
-                <div className="grid md:grid-cols-3 gap-6 mb-16">
-                    <div className="bg-white rounded-3xl p-6 shadow-lg text-center hover:shadow-xl transition-all border-t-4 border-orange-300">
-                        <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📧</div>
-                        <h3 className="font-bold text-dark-grey mb-2">Email</h3>
-                        <p className="text-text-secondary text-sm">contact@ouestmedor.fr</p>
-                        <p className="text-text-secondary text-sm">Réponse sous 24h</p>
-                    </div>
-                    <div className="bg-white rounded-3xl p-6 shadow-lg text-center hover:shadow-xl transition-all border-t-4 border-yellow-300">
-                        <div className="w-14 h-14 bg-yellow-200 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📞</div>
-                        <h3 className="font-bold text-dark-grey mb-2">Téléphone</h3>
-                        <p className="text-text-secondary text-sm">01 23 45 67 89</p>
-                        <p className="text-text-secondary text-sm">Lun-Ven 9h-18h</p>
-                    </div>
-                    <div className="bg-white rounded-3xl p-6 shadow-lg text-center hover:shadow-xl transition-all border-t-4 border-pink-300">
-                        <div className="w-14 h-14 bg-pink-200 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📍</div>
-                        <h3 className="font-bold text-dark-grey mb-2">Adresse</h3>
-                        <p className="text-text-secondary text-sm">12 Rue des Toutous</p>
-                        <p className="text-text-secondary text-sm">75000 Paris</p>
-                    </div>
+            <div className="max-w-4xl mx-auto px-5 pb-16">
+                <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                    Contact
+                </h1>
+                <p className="text-sm text-text-secondary">
+                    Une question, un doute, une histoire à partager ?
+                </p>
+            </div>
+
+            <div className="max-w-5xl mx-auto px-5 pb-20">
+                {/* Contact cards */}
+                <div className="grid md:grid-cols-3 gap-px bg-border rounded overflow-hidden mb-14">
+                    {[
+                        { icon: '📧', title: 'Email', line1: 'contact@ouestmedor.fr', line2: 'Réponse sous 24h' },
+                        { icon: '📞', title: 'Téléphone', line1: '01 23 45 67 89', line2: 'Lun-Ven 9h-18h' },
+                        { icon: '📍', title: 'Adresse', line1: '12 Rue des Toutous', line2: '75000 Paris' },
+                    ].map((card) => (
+                        <div key={card.title} className="bg-bg-elevated p-6 text-center hover:bg-bg-hover transition-colors">
+                            <div className="w-10 h-10 bg-accent-dim rounded flex items-center justify-center text-lg mx-auto mb-3">
+                                {card.icon}
+                            </div>
+                            <h3 className="text-sm font-semibold text-text-primary mb-1">{card.title}</h3>
+                            <p className="text-xs text-text-secondary">{card.line1}</p>
+                            <p className="text-xs text-text-muted">{card.line2}</p>
+                        </div>
+                    ))}
                 </div>
 
+                {/* Form */}
                 <div className="max-w-2xl mx-auto">
-                    <div className="bg-white rounded-3xl shadow-lg p-8 md:p-10 border-t-4 border-orange-300">
-                        <h2 className="text-2xl font-bold text-dark-grey mb-2">Envoie-nous un message</h2>
-                        <p className="text-text-secondary text-sm mb-8">Tous les champs marqués d'un * sont obligatoires.</p>
+                    <div className="bg-bg-elevated border border-border rounded p-8 md:p-10">
+                        <h2 className="text-lg font-bold text-text-primary mb-1">Envoie-nous un message</h2>
+                        <p className="text-xs text-text-muted mb-8">Tous les champs marqués d'un * sont obligatoires.</p>
 
-                        <form className="space-y-6">
+                        <form className="space-y-5">
                             <div className="grid sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-dark-grey mb-1.5">
-                                        Prénom <span className="text-orange-400">*</span>
+                                    <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                                        Prénom *
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="Sophie"
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none transition-colors bg-light-grey text-dark-grey placeholder:text-gray-400"
+                                        className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-dark-grey mb-1.5">
-                                        Nom <span className="text-orange-400">*</span>
+                                    <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                                        Nom *
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="Martin"
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none transition-colors bg-light-grey text-dark-grey placeholder:text-gray-400"
+                                        className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-dark-grey mb-1.5">
-                                    Email <span className="text-orange-400">*</span>
+                                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                                    Email *
                                 </label>
                                 <input
                                     type="email"
                                     placeholder="sophie@exemple.fr"
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none transition-colors bg-light-grey text-dark-grey placeholder:text-gray-400"
+                                    className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-dark-grey mb-1.5">
-                                    Téléphone <span className="text-text-secondary">(optionnel)</span>
+                                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                                    Téléphone <span className="text-text-muted">(optionnel)</span>
                                 </label>
                                 <input
                                     type="tel"
                                     placeholder="06 01 02 03 04"
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none transition-colors bg-light-grey text-dark-grey placeholder:text-gray-400"
+                                    className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-dark-grey mb-1.5">
-                                    Sujet <span className="text-orange-400">*</span>
+                                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                                    Sujet *
                                 </label>
-                                <select className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none transition-colors bg-light-grey text-dark-grey">
+                                <select className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0">
                                     <option value="">Sélectionne un sujet</option>
                                     <option value="produit">Question sur un produit</option>
                                     <option value="commande">Suivi de commande</option>
@@ -106,13 +104,13 @@ export const Contact = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-dark-grey mb-1.5">
-                                    Message <span className="text-orange-400">*</span>
+                                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                                    Message *
                                 </label>
                                 <textarea
                                     rows={5}
                                     placeholder="Dis-nous tout..."
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none transition-colors bg-light-grey text-dark-grey placeholder:text-gray-400 resize-y"
+                                    className="w-full px-3 py-2 rounded border border-border bg-bg-surface text-text-primary text-sm focus:border-accent focus:ring-0 placeholder:text-text-muted resize-y"
                                 />
                             </div>
 
@@ -120,40 +118,21 @@ export const Contact = () => {
                                 <input
                                     id="consent"
                                     type="checkbox"
-                                    className="mt-1 w-4 h-4 rounded border-gray-300 text-orange-400 focus:ring-orange-400"
+                                    className="mt-1 w-4 h-4 rounded border-border bg-bg-surface text-accent focus:ring-accent"
                                 />
-                                <label htmlFor="consent" className="text-sm text-text-secondary">
+                                <label htmlFor="consent" className="text-xs text-text-muted">
                                     J'accepte que mes données soient traitées pour répondre à ma demande.{' '}
-                                    <a href="#" className="text-orange-400 hover:underline">Politique de confidentialité</a>.
+                                    <a href="#" className="text-accent hover:underline">Politique de confidentialité</a>.
                                 </label>
                             </div>
 
                             <button
                                 type="submit"
-                                className="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+                                className="w-full bg-accent hover:bg-accent-hover text-bg font-semibold text-sm px-8 py-3 rounded transition-all"
                             >
-                                <span className="flex items-center justify-center gap-2">
-                                    Envoyer mon message
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                    </svg>
-                                </span>
+                                Envoyer mon message
                             </button>
                         </form>
-                    </div>
-
-                    <div className="mt-8 bg-gradient-to-r from-orange-400 via-pink-300 to-purple-300 rounded-3xl p-8 text-center text-white">
-                        <span className="inline-block text-4xl mb-3">🐕</span>
-                        <h3 className="text-2xl font-bold mb-2">Besoin d'aide rapidement ?</h3>
-                        <p className="text-white/80 mb-6">
-                            Consulte notre FAQ pour trouver une réponse immédiate à tes questions.
-                        </p>
-                        <a
-                            href="#"
-                            className="inline-block bg-white text-dark-grey font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105"
-                        >
-                            Voir la FAQ
-                        </a>
                     </div>
                 </div>
             </div>
