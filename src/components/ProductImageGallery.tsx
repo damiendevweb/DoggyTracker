@@ -14,7 +14,7 @@ export const ProductImageGallery = ({ images, productName }: Props) => {
                 <img
                     src={main.image_url}
                     alt={main.image_alt || productName}
-                    className="aspect-square w-full object-cover rounded border border-border"
+                    className="aspect-square w-full object-cover rounded"
                 />
             )}
 
@@ -25,7 +25,7 @@ export const ProductImageGallery = ({ images, productName }: Props) => {
                             key={image.id}
                             src={image.image_url}
                             alt={image.image_alt || productName}
-                            className="aspect-square w-full object-cover rounded border border-border"
+                            className="aspect-square w-full object-cover rounded"
                         />
                     ))}
                 </div>

@@ -18,9 +18,17 @@ export const NavigationBar = () => {
     <header
       className="sticky w-full top-0 z-50 p-4"
     >
-        <div className={`flex items-center justify-between max-w-7xl mx-auto rounded-lg px-5 h-14 transition-all duration-400 header--is-transparent ${
-        scrolled || menuOpen ? 'bg-white header--is-activate' : 'bg-transparent hover:bg-white'
-      }`}>
+<div className={`
+  flex items-center justify-between 
+  max-w-7xl mx-auto 
+  rounded-lg px-5 h-14 
+  transition-all duration-400
+  hover:bg-white hover:shadow-[0_4px_8px_0px_rgb(0_0_0/15%)]
+  ${scrolled || menuOpen 
+    ? 'bg-white shadow-[0_4px_8px_0px_rgb(0_0_0/15%)] header--is-activate' 
+    : 'bg-transparent'
+  }
+`}>
           <div className="flex items-center justify-between gap-4">
             <Link to="/" className="flex items-center gap-2 group">
               <span
@@ -41,7 +49,7 @@ export const NavigationBar = () => {
                   <li key={link.to}>
                     <Link
                     to={link.to}
-                    className="px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-bg-hover rounded transition-colors"
+                    className="px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-hover rounded transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -55,14 +63,14 @@ export const NavigationBar = () => {
             {user ? (
               <Link
                 to="/profile"
-                className="text-xs font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded border border-border hover:border-border-strong transition-colors"
+                className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded border border-border hover:border-border-strong transition-colors"
               >
                 Profil
               </Link>
             ) : (
               <Link
                 to="/login"
-                className="text-xs font-medium text-bg bg-accent hover:bg-accent-hover px-4 py-1.5 rounded transition-colors"
+                className="text-sm font-medium text-bg bg-accent hover:bg-accent-hover px-4 py-1.5 rounded transition-colors"
               >
                 Connexion
               </Link>

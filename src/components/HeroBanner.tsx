@@ -1,10 +1,19 @@
 import { Link } from 'react-router-dom'
+import heroImage from '../assets/images/hero-1.jpg'
 
 export const HeroBanner = () => {
     return (
-        <section className="relative bg-bg border-b border-border">
-            <div className="max-w-7xl mx-auto px-5">
-                <div className="flex flex-col justify-center py-16 lg:py-24 lg:pr-12 animate-fade-in-up">
+        <section className="hero-banner relative bg-bg border-b border-border -mt-22">
+            <div className="absolute inset-0 overflow-hidden">
+                <img
+                    src={heroImage}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    aria-hidden="true"
+                />
+            </div>
+            <div className="max-w-7xl mx-auto px-5 mt-22">
+                <div className="flex flex-col justify-center py-16 lg:py-24 lg:pr-12 animate-fade-in-up relative z-10">
 
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] text-text-primary mb-5">
                         Ne perdez plus
