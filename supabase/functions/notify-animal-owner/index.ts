@@ -82,25 +82,6 @@ Deno.serve(async (req) => {
                   })
             }
 
-            const { data: lockRow } = await supabase
-                  .from('animal_access_notification_locks')
-                  .select('animal_id, last_notified_at')
-                  .eq('animal_id', event.animal_id)
-                  .maybeSingle()
-
-            if (lockRow?.last_notified_at) {
-                  const last = new Date(lockRow.last_notified_at).getTime()
-                  const now = Date.now()
-                  const diffMs = now - last
-
-                  if (diffMs < 30 * 1000) {
-                        return new Response(JSON.stringify({ ok: true, skipped: 'Rate limited' }), {
-                              status: 200,
-                              headers: corsHeaders,
-                        })
-                  }
-            }
-
             const { data: animal, error: animalError } = await supabase
                   .from('animal')
                   .select('id, nom, user_id')
@@ -150,8 +131,8 @@ Deno.serve(async (req) => {
             const animalName = animal.nom ?? 'votre animal'
             const meta = event.meta ?? {}
 
-            const rawAddress = typeof meta.address === 'string' ? meta.address : null
-            const shortAddress = typeof meta.shortAddress === 'string' ? meta.shortAddress : null
+            const rawAddress = typeof meta.address === 'string' ? meta.address : (typeof meta.shortAddress === 'string' ? meta.shortAddress : null)
+            const shortAddress = typeof meta.shortAddress === 'string' ? meta.shortAddress : (typeof meta.address === 'string' ? meta.address : null)
             const latitude = typeof meta.latitude === 'number' ? meta.latitude : null
             const longitude = typeof meta.longitude === 'number' ? meta.longitude : null
 
@@ -206,20 +187,6 @@ Deno.serve(async (req) => {
                         }
                   }
             }
-
-            if (invalidSubscriptionIds.length > 0) {
-                  await supabase
-                        .from('push_subscriptions')
-                        .delete()
-                        .in('id', invalidSubscriptionIds)
-            }
-
-            await supabase
-                  .from('animal_access_notification_locks')
-                  .upsert({
-                        animal_id: event.animal_id,
-                        last_notified_at: new Date().toISOString(),
-                  })
 
             return new Response(
                   JSON.stringify({

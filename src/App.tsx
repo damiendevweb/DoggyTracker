@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 
 import { useAuth } from './hooks/useAuth'
 import { AuthPage } from './pages/AuthPage'
@@ -19,9 +19,11 @@ import { ProductPage } from './pages/ProductPage'
 import { BlogPostPage } from './pages/BlogPostPage'
 import { NotreHistoire } from './pages/NotreHistoire'
 import { LeConcept } from './pages/LeConcept'
+import { ToastProvider } from './components/Toast'
 
 function App() {
   const { user, loading } = useAuth()
+  const location = useLocation()
 
   if (loading) {
     return (
@@ -31,38 +33,42 @@ function App() {
     )
   }
 
+  const showPWA = (location.pathname === '/dashboard' || location.pathname === '/profile') && user
+
   return (
-    <div className="min-h-screen bg-light-grey flex flex-col">
-      <ScrollToTop />
-      <TopInfoBanner />
-      <NavigationBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/dashboard" element={
-          user ? <Dashboard /> : <Navigate to="/login" />
-        } />
-        <Route
-          path="/profile"
-          element={user ? <ProfilePage /> : <Navigate to="/login" />}
-        />
-        <Route path='categorie/medaille-gravee' element={<ProductList />} />
-        <Route path='produit/:slug' element={<ProductPage />} />
-        <Route path='generate-qr-code' element={<GenerateQR />} />
-        <Route path='contact' element={<Contact />} />
-        <Route path='notre-histoire' element={<NotreHistoire />} />
-        <Route path='le-concept' element={<LeConcept />} />
-        <Route path='blog/:slug' element={<BlogPostPage />} />
+    <ToastProvider>
+      <div className="min-h-screen bg-light-grey flex flex-col">
+        <ScrollToTop />
+        <TopInfoBanner />
+        <NavigationBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/dashboard" element={
+            user ? <Dashboard /> : <Navigate to="/login" />
+          } />
+          <Route
+            path="/profile"
+            element={user ? <ProfilePage /> : <Navigate to="/login" />}
+          />
+          <Route path='categorie/medaille-gravee' element={<ProductList />} />
+          <Route path='produit/:slug' element={<ProductPage />} />
+          <Route path='generate-qr-code' element={<GenerateQR />} />
+          <Route path='contact' element={<Contact />} />
+          <Route path='notre-histoire' element={<NotreHistoire />} />
+          <Route path='le-concept' element={<LeConcept />} />
+          <Route path='blog/:slug' element={<BlogPostPage />} />
 
-        <Route path="/:animalId" element={<AnimalPage />} />
+          <Route path="/:animalId" element={<AnimalPage />} />
 
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
 
-      <PWAInstallPrompt />
-      <Footer />
-    </div>
+        {showPWA && <PWAInstallPrompt />}
+        <Footer />
+      </div>
+    </ToastProvider>
   )
 }
 

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { reverseGeocode } from '../lib/reverse-geocoding'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useAge } from '../hooks/useAge'
+import { useToast } from '../components/Toast'
 
 type Animal = {
     id: string
@@ -31,8 +32,8 @@ type AccessMeta = {
     address?: string
 }
 
-const SCAN_COOLDOWN_MS = 30_000
 const LOCATION_TIMEOUT_MS = 8_000
+const TOAST_DELAY_MS = 8_000
 
 export const AnimalPage = () => {
     const { animalId } = useParams<{ animalId: string }>()
@@ -41,10 +42,12 @@ export const AnimalPage = () => {
     const [error, setError] = useState<string | null>(null)
     const [formData,] = useState<Partial<Animal>>({})
     const hasSentAccessEvent = useRef(false)
+    const toastShownRef = useRef(false)
+    const manualNotifyPending = useRef(false)
 
     const { display: ageDisplay } = useAge(formData.birth_date)
-
     const { getLocationPromise } = useGeolocation()
+    const { showToast } = useToast()
 
     const normalizedAnimalId = animalId?.toUpperCase() ?? ''
     const isFicheEmpty = animal && (!animal.nom || animal.nom.trim() === '')
@@ -52,12 +55,6 @@ export const AnimalPage = () => {
     const logAnimalAccess = async (id: string, meta: AccessMeta) => {
         try {
             if (typeof window === 'undefined') return
-
-            const key = `animal-access:${id}`
-            const now = Date.now()
-            const last = sessionStorage.getItem(key)
-
-            if (last && now - Number(last) < SCAN_COOLDOWN_MS) return
 
             const { error } = await supabase.from('animal_access_events').insert({
                 animal_id: id,
@@ -68,12 +65,39 @@ export const AnimalPage = () => {
 
             if (error) {
                 console.error('Erreur insert animal_access_events:', error)
-                return
             }
-
-            sessionStorage.setItem(key, String(now))
         } catch (e) {
             console.error('Erreur logAnimalAccess:', e)
+        }
+    }
+
+    const sendNotificationWithLocation = async (meta: AccessMeta) => {
+        if (!animal?.id) return
+        await logAnimalAccess(animal.id, meta)
+    }
+
+    const baseMeta: AccessMeta = {
+        from: 'url',
+        path: window.location.pathname,
+        userAgent: navigator.userAgent,
+    }
+
+    const requestLocationAndNotify = async () => {
+        const geo = await getLocationPromise(LOCATION_TIMEOUT_MS)
+        if (!geo) return
+
+        const latlng = { latitude: geo.latitude, longitude: geo.longitude }
+
+        try {
+            const addr = await Promise.race([
+                reverseGeocode(geo.latitude, geo.longitude),
+                new Promise<never>((_, reject) =>
+                    setTimeout(() => reject(new Error('timeout')), 4000)
+                ),
+            ])
+            await sendNotificationWithLocation({ ...baseMeta, ...latlng, address: addr.shortAddress })
+        } catch {
+            await sendNotificationWithLocation({ ...baseMeta, ...latlng })
         }
     }
 
@@ -116,12 +140,6 @@ export const AnimalPage = () => {
         if (typeof window === 'undefined') return
         if (hasSentAccessEvent.current) return
 
-        const key = `animal-access:${animal.id}`
-        const last = sessionStorage.getItem(key)
-        const now = Date.now()
-
-        if (last && now - Number(last) < SCAN_COOLDOWN_MS) return
-
         hasSentAccessEvent.current = true
 
         const baseMeta: AccessMeta = {
@@ -130,36 +148,65 @@ export const AnimalPage = () => {
             userAgent: navigator.userAgent,
         }
 
-        const resolveLocation = async (): Promise<Pick<AccessMeta, 'latitude' | 'longitude' | 'address'>> => {
-            const geo = await getLocationPromise(LOCATION_TIMEOUT_MS)
-            if (!geo) return {}
+        sendNotificationWithLocation(baseMeta)
 
-            const latlng = { latitude: geo.latitude, longitude: geo.longitude }
+        const toastTimer = setTimeout(() => {
+            if (toastShownRef.current) return
+            toastShownRef.current = true
 
-            try {
-                const addr = await Promise.race([
-                    reverseGeocode(geo.latitude, geo.longitude),
-                    new Promise<never>((_, reject) =>
-                        setTimeout(() => reject(new Error('timeout')), 4000)
-                    ),
-                ])
-                return { ...latlng, address: addr.shortAddress }
-            } catch {
-                return latlng
-            }
+            showToast({
+                message: 'Le propriétaire a été notifié que vous avez trouvé son animal. Accepteriez-vous de partager votre localisation temporairement pour l\'aider à vous rejoindre plus rapidement ?',
+                type: 'info',
+                duration: 0,
+                action: {
+                    label: 'Oui, partager',
+                    onClick: () => {
+                        requestLocationAndNotify()
+                    }
+                },
+                secondaryAction: {
+                    label: 'Non',
+                    onClick: () => {}
+                }
+            })
+        }, TOAST_DELAY_MS)
+
+        return () => clearTimeout(toastTimer)
+    }, [animal?.id, getLocationPromise, showToast])
+
+    const handleManualNotify = async () => {
+        if (manualNotifyPending.current) return
+        manualNotifyPending.current = true
+
+        const geo = await getLocationPromise(LOCATION_TIMEOUT_MS)
+        manualNotifyPending.current = false
+
+        if (!geo) {
+            showToast({
+                message: 'Vous devez accepter le partage temporaire de votre localisation pour prévenir le propriétaire',
+                type: 'warning',
+                duration: 5000
+            })
+            return
         }
 
-        const resolveAndSend = async () => {
-            const location = await resolveLocation()
-            if (cancelled) return
-            await logAnimalAccess(animal.id, { ...baseMeta, ...location })
+        const latlng = { latitude: geo.latitude, longitude: geo.longitude }
+        const manualMeta = { ...baseMeta, from: 'manual_button' as const }
+
+        try {
+            const addr = await Promise.race([
+                reverseGeocode(geo.latitude, geo.longitude),
+                new Promise<never>((_, reject) =>
+                    setTimeout(() => reject(new Error('timeout')), 4000)
+                ),
+            ])
+            await sendNotificationWithLocation({ ...manualMeta, ...latlng, address: addr.shortAddress })
+            showToast({ message: 'Propriétaire prévenu avec votre localisation', type: 'success' })
+        } catch {
+            await sendNotificationWithLocation({ ...manualMeta, ...latlng })
+            showToast({ message: 'Propriétaire prévenu', type: 'success' })
         }
-
-        let cancelled = false
-        void resolveAndSend()
-
-        return () => { cancelled = true }
-    }, [animal?.id, getLocationPromise])
+    }
 
     if (loading) {
         return (
@@ -295,6 +342,15 @@ export const AnimalPage = () => {
                                 </div>
                             </div>
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={handleManualNotify}
+                            disabled={manualNotifyPending.current}
+                            className="w-full bg-accent hover:bg-accent-hover text-bg font-semibold text-sm py-2.5 rounded transition-colors disabled:opacity-50"
+                        >
+                            {manualNotifyPending.current ? 'Localisation en cours...' : 'Prévenir le propriétaire que vous avez retrouvé son animal'}
+                        </button>
                     </div>
                 </div>
             </div>
