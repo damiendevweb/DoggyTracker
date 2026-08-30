@@ -41,7 +41,7 @@ export const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center items-center px-5 py-16 bg-bg">
+    <div className="flex-1 flex flex-col justify-center items-center px-5 py-12 bg-bg">
       <div className="w-full max-w-sm">
         <h1 className="text-xl font-bold text-text-primary text-center mb-8" style={{ fontFamily: "'Unbounded', sans-serif" }}>
           Nouveau mot de passe
