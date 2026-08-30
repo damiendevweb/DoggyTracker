@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import heroImage from '../assets/images/hero-1.jpg'
 
 const products = [
   { id: 1, name: 'Médaille QR', href: 'medaille-qr', price: '48 €' },
@@ -9,24 +10,24 @@ const products = [
 
 export const ProductList = () => {
   return (
-    <div className="bg-bg">
+    <div className="flex-1">
       <div className="max-w-6xl mx-auto px-5 py-16">
-        <div className="flex items-center gap-3 mb-8">
-          <span className="text-[10px] font-semibold text-accent uppercase tracking-widest">Produits</span>
-          <div className="flex-1 h-px bg-border" />
+        <div className="mb-8">
+          <h2 className="font-unbounded text-3xl font-bold text-text-primary mb-6">
+            Nos produits
+          </h2>
+          <p className="text-text-secondary max-w-2xl text-sm">
+            Découvrez notre gamme de médailles en acier inoxydable, conçues pour assurer la sécurité de votre animal. Chaque médaille est équipée d'un QR code unique, permettant à toute personne qui le scanne d'accéder instantanément aux informations de contact que vous avez fournies.
+          </p>
         </div>
-        <h1 className="text-3xl font-bold text-text-primary mb-8" style={{ fontFamily: "'Unbounded', sans-serif" }}>
-          Nos produits
-        </h1>
-        <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-border rounded overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-hidden">
           {products.map((product) => (
             <Link
               key={product.id}
               to={`/produit/${product.href}`}
-              className="group bg-bg-elevated p-5 hover:bg-bg-hover transition-colors"
             >
-              <div className="aspect-square w-full bg-bg-surface border border-border mb-4 flex items-center justify-center">
-                <span className="text-2xl">🏅</span>
+              <div className="aspect-4/5 w-full mb-4 flex items-center justify-center">
+                <img src={heroImage} alt={product.name} className="w-full h-full object-cover"/>
               </div>
               <h3 className="text-sm font-medium text-text-primary">{product.name}</h3>
               <p className="mt-1 text-sm font-semibold text-accent">{product.price}</p>

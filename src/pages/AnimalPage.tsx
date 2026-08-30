@@ -224,7 +224,7 @@ export const AnimalPage = () => {
             <div className="min-h-screen flex items-center justify-center bg-bg">
                 <div className="text-center p-8 max-w-md">
                     <span className="text-4xl block mb-4">🐶</span>
-                    <h2 className="text-2xl font-bold text-text-primary mb-2" style={{ fontFamily: "'Unbounded', sans-serif" }}>{normalizedAnimalId}</h2>
+                    <h2 className="font-unbounded text-2xl font-bold text-text-primary mb-2">{normalizedAnimalId}</h2>
                     <p className="text-sm text-text-secondary mb-6">{error || 'Animal introuvable'}</p>
                     <p className="text-sm text-text-muted">
                         Vérifie l'ID ou{' '}
@@ -242,7 +242,7 @@ export const AnimalPage = () => {
                     <div className="w-14 h-14 bg-accent-dim rounded mx-auto mb-5 flex items-center justify-center">
                         <span className="text-2xl">🐕</span>
                     </div>
-                    <h2 className="text-xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                    <h2 className="font-unbounded text-xl font-bold text-text-primary mb-3">
                         Fiche {normalizedAnimalId}
                     </h2>
                     <p className="text-sm text-text-secondary mb-4 leading-relaxed">
@@ -272,8 +272,7 @@ export const AnimalPage = () => {
             <div className="max-w-2xl mx-auto px-5">
                 <div className="bg-bg-elevated border border-border overflow-hidden">
                     <div className="bg-accent p-8 text-bg text-center">
-                        <span className="text-3xl block mb-2">🐾</span>
-                        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Unbounded', sans-serif" }}>{animal.nom}</h1>
+                        <h1 className="font-unbounded text-2xl font-bold">{animal.nom}</h1>
                         <p className="text-bg/80 text-sm mt-1">{animal.race}</p>
                         <span className="inline-block mt-3 bg-bg/20 rounded px-2.5 py-1 text-xs">
                             {animal.id}

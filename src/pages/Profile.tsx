@@ -44,7 +44,7 @@ export const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-bg">
+      <div className="flex min-h-screen items-center justify-center">
         <p className="text-sm text-text-muted">Chargement...</p>
       </div>
     )
@@ -52,18 +52,18 @@ export const ProfilePage = () => {
 
   if (error) {
     return (
-      <div className="p-5 bg-bg min-h-screen">
+      <div className="p-5 min-h-screen">
         <div className="rounded bg-error/10 border border-error/20 p-4 text-sm text-error">{error}</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-bg md:flex">
+    <div className="md:flex flex-1">
       <SidebarProfile />
       <main className="flex-1 p-6 md:p-10">
         <div className="mx-auto max-w-2xl bg-bg-elevated border border-border rounded p-8">
-          <h1 className="mb-6 text-xl font-bold text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>Mon profil</h1>
+          <h1 className="font-unbounded mb-6 text-xl font-bold text-text-primary">Mon profil</h1>
           <div className="space-px bg-border rounded overflow-hidden">
             <div className="bg-bg-surface p-4">
               <p className="text-[10px] text-text-muted uppercase tracking-wider">Prénom</p>

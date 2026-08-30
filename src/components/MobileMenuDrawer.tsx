@@ -93,7 +93,7 @@ export const MobileMenuDrawer = () => {
                             key={link.to}
                             to={link.to}
                             onClick={() => setOpen(false)}
-                            className={`block px-3 py-2.5 text-sm font-medium transition-colors rounded ${
+                            className={`link-style block px-3 py-2.5 text-sm font-medium transition-colors rounded ${
                               location.pathname === link.to
                                 ? "bg-accent text-bg"
                                 : "text-text-secondary hover:text-text-primary hover:bg-bg-hover"

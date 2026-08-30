@@ -122,7 +122,7 @@ export const ProductPage = () => {
                                 <span className="text-[10px] font-semibold text-accent uppercase tracking-widest">Médaille connectée</span>
                                 <div className="flex-1 h-px bg-border" />
                             </div>
-                            <h1 className="text-2xl md:text-3xl text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                            <h1 className="font-unbounded text-2xl md:text-3xl text-text-primary">
                                 {product.name}
                             </h1>
                             <p className="mt-2 text-lg font-bold text-accent">
@@ -169,7 +169,7 @@ export const ProductPage = () => {
                         <span className="text-[10px] font-semibold text-accent uppercase tracking-widest">Technologie</span>
                         <div className="flex-1 h-px bg-border" />
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                    <h2 className="font-unbounded text-2xl md:text-3xl font-bold text-text-primary mb-3">
                         Un QR Code, des retrouvailles
                     </h2>
                     <p className="text-sm text-text-secondary leading-relaxed max-w-xl mx-auto mb-10">

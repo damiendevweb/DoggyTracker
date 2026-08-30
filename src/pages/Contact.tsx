@@ -10,7 +10,7 @@ export const Contact = () => {
             </div>
 
             <div className="max-w-4xl mx-auto px-5 pb-16">
-                <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                <h1 className="font-unbounded text-3xl md:text-4xl font-bold text-text-primary mb-3">
                     Contact
                 </h1>
                 <p className="text-sm text-text-secondary">

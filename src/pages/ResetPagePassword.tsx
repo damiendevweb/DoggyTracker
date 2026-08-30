@@ -43,7 +43,7 @@ export const ResetPasswordPage = () => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center px-5 py-12 bg-bg">
       <div className="w-full max-w-sm">
-        <h1 className="text-xl font-bold text-text-primary text-center mb-8" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+        <h1 className="font-unbounded text-xl font-bold text-text-primary text-center mb-8">
           Nouveau mot de passe
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">

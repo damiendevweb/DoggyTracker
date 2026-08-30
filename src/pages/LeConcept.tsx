@@ -33,7 +33,7 @@ export const LeConcept = () => {
             </div>
 
             <div className="max-w-4xl mx-auto px-5 pb-16">
-                <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                <h1 className="font-unbounded text-3xl md:text-4xl font-bold text-text-primary mb-3">
                     Le concept
                 </h1>
                 <p className="text-sm text-text-secondary max-w-xl">
@@ -130,7 +130,7 @@ export const LeConcept = () => {
             {/* CTA */}
             <section className="bg-bg py-16">
                 <div className="max-w-3xl mx-auto px-5 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                    <h2 className="font-unbounded text-2xl md:text-3xl font-bold text-text-primary mb-3">
                         Prêt ?
                     </h2>
                     <p className="text-sm text-text-secondary mb-6">Rejoignez les 2500+ familles protégées.</p>

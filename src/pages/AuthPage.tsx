@@ -70,7 +70,7 @@ export const AuthPage = () => {
         <div className="flex-1 flex flex-col justify-center items-center px-5 py-12">
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
-                    <h1 className="text-xl font-bold text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                    <h1 className="font-unbounded text-xl font-bold text-text-primary">
                         {isSignUp ? 'Inscription' : 'Connexion'}
                     </h1>
                     <p className="text-xs text-text-secondary mt-2">

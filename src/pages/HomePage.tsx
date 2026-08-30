@@ -65,7 +65,7 @@ export const HomePage = () => {
                                 <span className="text-[10px] font-semibold text-accent uppercase tracking-widest">Produit</span>
                                 <div className="flex-1 h-px bg-border" />
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-4" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                            <h2 className="font-unbounded text-2xl md:text-3xl font-bold text-text-primary mb-4">
                                 La médaille qui change tout
                             </h2>
                             <p className="text-sm text-text-secondary leading-relaxed mb-6">
@@ -120,17 +120,17 @@ export const HomePage = () => {
             <BlogSection />
 
             {/* ── CTA ── */}
-            <section className="bg-bg-elevated border-t border-border py-16">
+            <section className="bg-accent py-16">
                 <div className="max-w-3xl mx-auto px-5 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
-                        Prêt à protéger ?
+                    <h2 className="font-unbounded text-2xl md:text-3xl font-bold text-white mb-3">
+                        Prêt à protéger votre animal de compagnie ?
                     </h2>
-                    <p className="text-sm text-text-secondary mb-6">
-                        +2 500 familles nous font déjà confiance.
+                    <p className="text-sm text-white mb-6">
+                        Rejoignez l'aventure Où est Médor !
                     </p>
                     <Link
                         to="/categorie/medaille-gravee"
-                        className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-bg font-semibold text-sm px-6 py-2.5 rounded transition-all"
+                        className="inline-flex items-center gap-2 bg-white hover:bg-accent-hover hover:text-white text-accent font-semibold text-sm px-6 py-2.5 rounded transition-all"
                     >
                         Commander
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>

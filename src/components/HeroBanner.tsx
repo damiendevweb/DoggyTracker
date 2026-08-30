@@ -3,7 +3,7 @@ import heroImage from '../assets/images/hero-1.jpg'
 
 export const HeroBanner = () => {
     return (
-        <section className="hero-banner relative bg-bg border-b border-border -mt-22">
+        <section className="hero-banner relative bg-bg -mt-22">
             <div className="absolute inset-0 overflow-hidden">
                 <img
                     src={heroImage}

@@ -22,7 +22,7 @@ export const NotreHistoire = () => {
             </div>
 
             <div className="max-w-4xl mx-auto px-5 pb-16">
-                <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                <h1 className="font-unbounded text-3xl md:text-4xl font-bold text-text-primary mb-3">
                     Notre histoire
                 </h1>
                 <p className="text-sm text-text-secondary">
@@ -51,7 +51,7 @@ export const NotreHistoire = () => {
 
             <section className="bg-bg-elevated border-t border-border py-16">
                 <div className="max-w-3xl mx-auto px-5 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                    <h2 className="font-unbounded text-2xl md:text-3xl font-bold text-text-primary mb-3">
                         Écrivez la suite
                     </h2>
                     <p className="text-sm text-text-secondary mb-6">Chaque médaille, une nouvelle histoire.</p>

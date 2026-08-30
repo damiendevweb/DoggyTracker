@@ -13,7 +13,7 @@ export default function SidebarProfile() {
     }`
 
   return (
-    <aside className="w-full border-r border-border bg-bg-elevated p-4 md:min-h-screen md:w-56">
+    <aside className="w-full border-r border-border bg-bg-elevated p-4 md:w-56">
       <nav className="space-y-0.5" aria-label="Navigation profil">
         <Link to="/profile" className={linkClass('/profile')}>
           Mon profil

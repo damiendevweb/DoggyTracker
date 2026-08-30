@@ -136,7 +136,7 @@ export const Dashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64 bg-bg">
+            <div className="flex justify-center items-center h-64">
                 <p className="text-sm text-text-muted">Chargement...</p>
             </div>
         )
@@ -144,7 +144,7 @@ export const Dashboard = () => {
 
     if (error) {
         return (
-            <div className="bg-bg min-h-screen p-6">
+            <div className="p-6">
                 <div className="text-center mt-20 text-error p-8 bg-error/10 rounded border border-error/20 text-sm">
                     {error}
                 </div>
@@ -154,7 +154,7 @@ export const Dashboard = () => {
 
     if (!animal) {
         return (
-            <div className="bg-bg min-h-screen p-6">
+            <div className="p-6">
                 <div className="text-center mt-20 p-8 bg-bg-elevated rounded border border-border text-sm text-text-muted">
                     Aucun animal lié à ton compte.
                 </div>
@@ -165,7 +165,7 @@ export const Dashboard = () => {
     const inputClass = "w-full p-2.5 border border-border rounded text-sm focus:ring-0 focus:border-accent bg-bg-surface text-text-primary"
 
     return (
-        <div className="min-h-screen bg-bg md:flex">
+        <div className="md:flex flex-1">
             <SidebarProfile />
             <div className="flex-1 p-6 md:p-10">
                 <div className="mx-auto max-w-2xl bg-bg-elevated border border-border rounded p-8">

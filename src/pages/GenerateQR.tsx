@@ -5,7 +5,7 @@ export const GenerateQR = () => {
 
   return (
     <section className="p-6 bg-bg-elevated border border-border rounded">
-      <h3 className="text-lg font-bold mb-4 text-center text-text-primary" style={{ fontFamily: "'Unbounded', sans-serif" }}>Générateur de QR</h3>
+      <h3 className="font-unbounded text-lg font-bold mb-4 text-center text-text-primary">Générateur de QR</h3>
       <button
         onClick={generateNewQR}
         disabled={loading}

@@ -36,7 +36,7 @@ export const BlogPostPage = () => {
                             <span className="text-[10px] text-text-muted">{post.readTime} de lecture</span>
                         </div>
 
-                        <h1 className="text-2xl md:text-3xl font-bold text-text-primary mb-8" style={{ fontFamily: "'Unbounded', sans-serif" }}>
+                        <h1 className="font-unbounded text-2xl md:text-3xl font-bold text-text-primary mb-8">
                             {post.title}
                         </h1>
 
