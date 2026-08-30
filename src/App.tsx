@@ -37,7 +37,7 @@ function App() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen  flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <ScrollToTop />
         <TopInfoBanner />
         <NavigationBar />

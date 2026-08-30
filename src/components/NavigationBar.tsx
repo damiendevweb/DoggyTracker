@@ -34,17 +34,13 @@ export const NavigationBar = () => {
         `}
       >
         {/* Mobile - grid centré */}
-        <div className="grid grid-cols-3 items-center w-full lg:hidden">
+        <div className="grid grid-cols-[60px_1fr_60px] items-center w-full lg:hidden">
           <div className="flex items-center">
             <MobileMenuDrawer />
           </div>
-          <div className="flex justify-center">
-            <Link to="/" className="flex items-center gap-2 group">
-              <span
-                className="font-unbounded text-sm font-semibold text-text-primary tracking-tight"
-              >
+          <div>
+            <Link to="/" className="font-unbounded text-sm font-semibold text-text-primary">
                 Où est Médor ?
-              </span>
             </Link>
           </div>
           <div className="flex justify-end items-center gap-2">

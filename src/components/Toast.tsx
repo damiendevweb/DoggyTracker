@@ -54,11 +54,11 @@ export const useToast = () => {
 }
 
 const ToastContainer = ({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: number) => void }) => (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none">
+    <div className="fixed bottom-0 lg:bottom-5 lg:right-5 z-50 flex flex-col gap-2 pointer-events-none">
         {toasts.map(toast => (
             <div
                 key={toast.id}
-                className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded border shadow-xl animate-fade-in-up min-w-[280px] max-w-[400px] ${
+                className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded border shadow-xl animate-fade-in-up w-fit m-2 lg:m-0 lg:min-w-70 lg:max-w-100 ${
                     toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' :
                     toast.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
                     toast.type === 'warning' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
@@ -66,7 +66,7 @@ const ToastContainer = ({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id
                 }`}
             >
                 <p className="text-sm flex-1">{toast.message}</p>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                     {toast.action && (
                         <button
                             onClick={() => { toast.action?.onClick(); onDismiss(toast.id); }}

@@ -268,11 +268,14 @@ export const AnimalPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-bg py-12">
+        <div className="flex-1">
             <div className="max-w-2xl mx-auto px-5">
+                <p className="text-text-primary *:text-sm mb-6 text-center">
+                    Vous venez de scanner la fiche de {animal.nom}, Appelez rapidement son propriétaire à l'aide des informations disponibles ci-dessous. S'il ne répond pas, n'hésitez pas à lui envoyer un SMS ou à contacter son vétérinaire.
+                </p>
                 <div className="bg-bg-elevated border border-border overflow-hidden">
                     <div className="bg-accent p-8 text-bg text-center">
-                        <h1 className="font-unbounded text-2xl font-bold">{animal.nom}</h1>
+                        <h2 className="font-unbounded text-2xl font-bold">{animal.nom}</h2>
                         <p className="text-bg/80 text-sm mt-1">{animal.race}</p>
                         <span className="inline-block mt-3 bg-bg/20 rounded px-2.5 py-1 text-xs">
                             {animal.id}
