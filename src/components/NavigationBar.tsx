@@ -15,122 +15,138 @@ export const NavigationBar = () => {
   }, []);
 
   return (
-    <header
-      className="sticky w-full top-0 z-50 p-4"
-    >
-<div className={`
-  flex items-center justify-between 
-  max-w-7xl mx-auto 
-  rounded-lg px-5 h-14 
-  transition-all duration-400
-  hover:bg-white hover:shadow-[0_4px_8px_0px_rgb(0_0_0/15%)]
-  ${scrolled || menuOpen 
-    ? 'bg-white shadow-[0_4px_8px_0px_rgb(0_0_0/15%)] header--is-activate' 
-    : 'bg-transparent'
-  }
-`}>
-          <div className="flex items-center justify-between gap-4">
-            <Link to="/" className="flex items-center gap-2 group">
-              <span
-                className="text-sm font-semibold text-text-primary tracking-tight"
-                style={{ fontFamily: "'Unbounded', sans-serif" }}
-              >
-                Où est Médor ?
-              </span>
-            </Link>
-            <nav>
-              <ul className="hidden lg:flex items-center gap-0.5 mr-4">
-                {[
-                  { to: "/categorie/medaille-gravee", label: "Produits" },
-                  { to: "/le-concept", label: "Concept" },
-                  { to: "/notre-histoire", label: "Histoire" },
-                  { to: "/contact", label: "Contact" },
-                ].map((link) => (
-                  <li key={link.to}>
-                    <Link
-                    to={link.to}
-                    className="px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-hover rounded transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {user ? (
-              <Link
-                to="/profile"
-                className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded border border-border hover:border-border-strong transition-colors"
-              >
-                Profil
-              </Link>
-            ) : (
-              <Link
-                to="/login"
-                className="text-sm font-medium text-bg bg-accent hover:bg-accent-hover px-4 py-1.5 rounded transition-colors"
-              >
-                Connexion
-              </Link>
-            )}
-
-            <ShoppingCartDrawer />
-
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              type="button"
-              className="inline-flex items-center p-1.5 text-text-secondary rounded hover:bg-bg-hover hover:text-text-primary lg:hidden transition-colors"
-              aria-expanded={menuOpen}
+    <header className="sticky w-full top-0 z-50 p-4">
+      <div
+        className={`
+          flex items-center justify-between 
+          max-w-7xl mx-auto 
+          rounded-lg px-5 h-14 
+          transition-all duration-400
+          hover:bg-white hover:shadow-[0_4px_8px_0px_rgb(0_0_0/15%)]
+          ${
+            scrolled || menuOpen
+              ? "bg-white shadow-[0_4px_8px_0px_rgb(0_0_0/15%)] header--is-activate"
+              : "bg-transparent"
+          }
+        `}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2 group">
+            <span
+              className="text-sm font-semibold text-text-primary tracking-tight"
+              style={{ fontFamily: "'Unbounded', sans-serif" }}
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-              >
-                {menuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="lg:hidden border-t border-border bg-bg-elevated">
-            <div className="px-5 py-3 space-y-1">
+              Où est Médor ?
+            </span>
+          </Link>
+          <nav>
+            <ul className="hidden lg:flex items-center gap-0.5 mr-4">
               {[
                 { to: "/categorie/medaille-gravee", label: "Produits" },
                 { to: "/le-concept", label: "Concept" },
                 { to: "/notre-histoire", label: "Histoire" },
                 { to: "/contact", label: "Contact" },
               ].map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="block px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-hover rounded transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-hover rounded transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-2">
+            <Link
+              to={user ? '/profile' : '/login'}
+              className="px-3 py-1.5 transition-colors"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="account__icon"
+              >
+                <circle
+                  cx="12"
+                  cy="6"
+                  r="4"
+                  stroke="var(--color-accent, #fff)"
+                  stroke-width="1.3"
+                  stroke-linejoin="round"
+                  fill="var(--svg-fill-color, transparent)"
+                ></circle>
+                <path
+                  d="M16.8377 22H7.16228C5.1146 22 3.6687 19.9939 4.31623 18.0513L5.31623 15.0513C5.72457 13.8263 6.87099 13 8.16228 13H15.8377C17.129 13 18.2754 13.8263 18.6838 15.0513L19.6838 18.0513C20.3313 19.9939 18.8854 22 16.8377 22Z"
+                  stroke="var(--color-accent, #fff)"
+                  stroke-width="1.3"
+                  stroke-linejoin="round"
+                  fill="var(--svg-fill-color, transparent)"
+                ></path>
+              </svg>
+            </Link>
+
+          <ShoppingCartDrawer />
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            type="button"
+            className="lg-hidden"
+            aria-expanded={menuOpen}
+          >
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="var(--color-accent, #fff)"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              {menuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div className="lg:hidden border-t border-border bg-bg-elevated">
+          <div className="px-5 py-3 space-y-1">
+            {[
+              { to: "/categorie/medaille-gravee", label: "Produits" },
+              { to: "/le-concept", label: "Concept" },
+              { to: "/notre-histoire", label: "Histoire" },
+              { to: "/contact", label: "Contact" },
+            ].map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="block px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-hover rounded transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
-        )}
+        </div>
+      )}
     </header>
   );
 };

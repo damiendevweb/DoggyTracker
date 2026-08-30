@@ -1,40 +1,54 @@
-import { useState } from 'react'
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { Link } from 'react-router-dom'
-import { useCart } from '../context/CartContext'
+import { useState } from "react";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const formatPrice = (priceCents: number) =>
-  new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(priceCents / 100)
+  new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  }).format(priceCents / 100);
 
 export const ShoppingCartDrawer = () => {
-  const [open, setOpen] = useState(false)
-  const { cart, cartCount, cartTotal, removeFromCart } = useCart()
+  const [open, setOpen] = useState(false);
+  const { cart, cartCount, cartTotal, removeFromCart } = useCart();
 
   return (
     <>
       <button onClick={() => setOpen(true)} className="relative">
         {cartCount > 0 && (
           <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent">
-            <span className="text-[10px] font-semibold text-bg">{cartCount}</span>
+            <span className="text-[10px] font-semibold text-bg">
+              {cartCount}
+            </span>
           </div>
         )}
 
         <svg
-          className="h-4 w-4 text-text-secondary"
-          aria-hidden="true"
-          fill="none"
+          width="24"
+          height="24"
           viewBox="0 0 24 24"
+          fill="none"
+          className="shopping-cart__icon"
         >
           <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
-          />
+            d="M4.67151 8.6279C4.85917 7.12661 6.13538 6 7.64835 6H16.3517C17.8646 6 19.1408 7.12661 19.3285 8.6279L20.5785 18.6279C20.8023 20.4185 19.4061 22 17.6017 22H6.39835C4.59385 22 3.19769 20.4185 3.42151 18.6279L4.67151 8.6279Z"
+            stroke="var(--color-accent, #fff)"
+            stroke-width="1.3"
+            stroke-linejoin="round"
+            fill="var(--svg-fill-color, transparent)"
+          ></path>
+          <path
+            d="M16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6"
+            stroke="var(--color-accent, #fff)"
+            stroke-width="1.3"
+            stroke-linejoin="round"
+          ></path>
         </svg>
       </button>
 
@@ -89,7 +103,10 @@ export const ShoppingCartDrawer = () => {
                         </div>
                       ) : (
                         <div className="flow-root">
-                          <ul role="list" className="-my-4 divide-y divide-border">
+                          <ul
+                            role="list"
+                            className="-my-4 divide-y divide-border"
+                          >
                             {cart.map((item) => (
                               <li key={item.cartItemId} className="flex py-4">
                                 <div className="h-20 w-20 shrink-0 overflow-hidden rounded border border-border bg-bg-surface">
@@ -106,18 +123,27 @@ export const ShoppingCartDrawer = () => {
                                   <div>
                                     <div className="flex justify-between text-sm font-medium text-text-primary">
                                       <h3>
-                                        <Link to={`/produit/${item.slug}`} onClick={() => setOpen(false)}>
+                                        <Link
+                                          to={`/produit/${item.slug}`}
+                                          onClick={() => setOpen(false)}
+                                        >
                                           {item.name}
                                         </Link>
                                       </h3>
-                                      <p className="ml-4 text-xs">{formatPrice(item.price_cents)}</p>
+                                      <p className="ml-4 text-xs">
+                                        {formatPrice(item.price_cents)}
+                                      </p>
                                     </div>
                                     <div className="mt-1">
-                                      <p className="text-[10px] text-text-muted">Personnalisation</p>
+                                      <p className="text-[10px] text-text-muted">
+                                        Personnalisation
+                                      </p>
                                       <ul className="text-xs text-text-secondary">
                                         <li>{item.customization?.petName}</li>
                                         <li>{item.customization?.phone1}</li>
-                                        {item.customization?.phone2 && <li>{item.customization?.phone2}</li>}
+                                        {item.customization?.phone2 && (
+                                          <li>{item.customization?.phone2}</li>
+                                        )}
                                       </ul>
                                     </div>
                                   </div>
@@ -127,7 +153,9 @@ export const ShoppingCartDrawer = () => {
 
                                     <button
                                       type="button"
-                                      onClick={() => removeFromCart(item.cartItemId)}
+                                      onClick={() =>
+                                        removeFromCart(item.cartItemId)
+                                      }
                                       className="font-medium text-error hover:text-error/80"
                                     >
                                       Supprimer
@@ -148,7 +176,9 @@ export const ShoppingCartDrawer = () => {
                       <p className="">{formatPrice(cartTotal)}</p>
                     </div>
 
-                    <p className="mt-0.5 text-xs text-success">Frais d'envoi offerts !</p>
+                    <p className="mt-0.5 text-xs text-success">
+                      Frais d'envoi offerts !
+                    </p>
 
                     <div className="mt-6">
                       <a
@@ -161,7 +191,7 @@ export const ShoppingCartDrawer = () => {
 
                     <div className="mt-6 flex justify-center text-center text-xs text-text-muted">
                       <p>
-                        ou{' '}
+                        ou{" "}
                         <button
                           type="button"
                           onClick={() => setOpen(false)}
@@ -179,5 +209,5 @@ export const ShoppingCartDrawer = () => {
         </div>
       </Dialog>
     </>
-  )
-}
+  );
+};
