@@ -39,15 +39,15 @@ export const ShoppingCartDrawer = () => {
           <path
             d="M4.67151 8.6279C4.85917 7.12661 6.13538 6 7.64835 6H16.3517C17.8646 6 19.1408 7.12661 19.3285 8.6279L20.5785 18.6279C20.8023 20.4185 19.4061 22 17.6017 22H6.39835C4.59385 22 3.19769 20.4185 3.42151 18.6279L4.67151 8.6279Z"
             stroke="var(--color-accent, #fff)"
-            stroke-width="1.3"
-            stroke-linejoin="round"
+            strokeWidth="1.3"
+            strokeLinejoin="round"
             fill="var(--svg-fill-color, transparent)"
           ></path>
           <path
             d="M16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6"
             stroke="var(--color-accent, #fff)"
-            stroke-width="1.3"
-            stroke-linejoin="round"
+            strokeWidth="1.3"
+            strokeLinejoin="round"
           ></path>
         </svg>
       </button>
