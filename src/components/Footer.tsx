@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer>
-      <div className="max-w-7xl mx-auto px-5 py-12">
+      <div className="max-w-7xl mx-auto px-5 py-8 lg:py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           {[
             { title: 'Produit', items: ['Médailles', 'Accessoires', 'Concept', 'Blog'] },
