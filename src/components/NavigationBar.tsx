@@ -38,7 +38,7 @@ export const NavigationBar = () => {
           <div className="flex items-center">
             <MobileMenuDrawer />
           </div>
-          <div>
+          <div className="text-center">
             <Link to="/" className="font-unbounded text-sm font-semibold text-text-primary">
                 Où est Médor ?
             </Link>
