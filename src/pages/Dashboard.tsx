@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAge } from '../hooks/useAge'
 import EnablePushButton from '../components/EnablePushButton'
@@ -44,6 +44,32 @@ export const Dashboard = () => {
     const [scans, setScans] = useState<ScanEvent[]>([])
     const [scansLoading, setScansLoading] = useState(true)
     const [historyOpen, setHistoryOpen] = useState(false)
+    const [openMonths, setOpenMonths] = useState<Set<string>>(new Set())
+
+    const scansByMonth = useMemo(() => {
+        const groups = new Map<string, { calendarDate: string; items: ScanEvent[] }>()
+        for (const scan of scans) {
+            const d = new Date(scan.created_at)
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+            if (!groups.has(key)) {
+                groups.set(key, {
+                    calendarDate: d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }),
+                    items: [],
+                })
+            }
+            groups.get(key)!.items.push(scan)
+        }
+        return Array.from(groups.entries()).map(([key, { calendarDate, items }]) => ({ key, calendarDate, items }))
+    }, [scans])
+
+    const toggleMonth = (key: string) => {
+        setOpenMonths(prev => {
+            const next = new Set(prev)
+            if (next.has(key)) next.delete(key)
+            else next.add(key)
+            return next
+        })
+    }
 
     const fetchAnimal = async () => {
         const { data: { user } } = await supabase.auth.getUser()
@@ -329,45 +355,97 @@ export const Dashboard = () => {
                                             Aucun scan enregistré pour le moment.
                                         </div>
                                     ) : (
-                                        <div className="overflow-x-auto">
-                                            <table className="w-full text-sm">
-                                                <thead>
-                                                    <tr className="border-b border-border">
-                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Date</th>
-                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Heure</th>
-                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Adresse</th>
-                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Coordonnées GPS</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {scans.map((scan) => {
-                                                        const d = new Date(scan.created_at)
-                                                        const date = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-                                                        const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-                                                        const address = scan.meta?.address ?? null
-                                                        const latitude = scan.meta?.latitude ?? null
-                                                        const longitude = scan.meta?.longitude ?? null
-                                                        return (
-                                                            <tr key={scan.id} className="border-b border-border last:border-0 hover:bg-bg-hover transition-colors">
-                                                                <td className="px-5 py-3 text-xs text-text-primary">{date}</td>
-                                                                <td className="px-5 py-3 text-xs text-text-primary">{time}</td>
-                                                                <td className="px-5 py-3 text-xs text-text-secondary">
-                                                                    {address || <span className="text-text-muted italic">Non communiquée</span>}
-                                                                </td>
-                                                                <td className="px-5 py-3 text-xs text-text-secondary">
-                                                                    {latitude != null && longitude != null ? (
-                                                                        <span className="text-text-muted italic">
-                                                                            {latitude.toFixed(6)}, {longitude.toFixed(6)}
-                                                                        </span>
-                                                                    ) : (
-                                                                        <span className="text-text-muted italic">Non communiquées</span>
-                                                                    )}
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    })}
-                                                </tbody>
-                                            </table>
+                                        <div>
+                                            {scansByMonth.map(({ key, calendarDate, items }) => {
+                                                const isOpen = openMonths.has(key)
+                                                return (
+                                                    <div key={key} className="border-b border-border last:border-0">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleMonth(key)}
+                                                            className="flex w-full items-center justify-between px-5 py-3 text-left text-xs font-semibold text-text-secondary hover:bg-bg-hover transition-colors"
+                                                        >
+                                                            <span className="capitalize">{calendarDate}</span>
+                                                            <span className="flex items-center gap-2">
+                                                                <span className="text-[10px] font-normal text-text-muted">{items.length} scan{items.length > 1 ? 's' : ''}</span>
+                                                                <svg
+                                                                    className={`w-3.5 h-3.5 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                                    strokeWidth={2}
+                                                                >
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                                                </svg>
+                                                            </span>
+                                                        </button>
+                                                        {isOpen && (
+                                                            <div className="overflow-x-auto">
+                                                                <table className="w-full text-sm">
+                                                                    <thead>
+                                                                        <tr className="border-t border-border">
+                                                                            <th className="px-5 py-2 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Date</th>
+                                                                            <th className="px-5 py-2 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Heure</th>
+                                                                            <th className="px-5 py-2 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Adresse</th>
+                                                                            <th className="px-5 py-2 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">GPS</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {items.map((scan) => {
+                                                                            const d = new Date(scan.created_at)
+                                                                            const date = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                                                                            const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                                                                            const address = scan.meta?.address ?? null
+                                                                            const latitude = scan.meta?.latitude ?? null
+                                                                            const longitude = scan.meta?.longitude ?? null
+                                                                            return (
+                                                                                <tr key={scan.id} className="border-t border-border first:border-0 hover:bg-bg-hover transition-colors">
+                                                                                    <td className="px-2 lg:px-5 py-2.5 text-xs text-text-primary">{date}</td>
+                                                                                    <td className="px-2 lg:px-5 py-2.5 text-xs text-text-primary">{time}</td>
+                                                                                    <td className="px-2 lg:px-5 py-2.5 text-xs text-text-secondary">
+                                                                                        {address ? (
+                                                                                            <a
+                                                                                                href={`https://www.google.fr/maps/dir/?api=1&destination=${encodeURIComponent(address)}`}
+                                                                                                target="_blank"
+                                                                                                rel="noopener noreferrer"
+                                                                                                className="inline-flex items-center gap-1 hover:text-sage-700 transition-colors"
+                                                                                            >
+                                                                                                {address}
+                                                                                                <svg className="w-3 h-3 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                                                                </svg>
+                                                                                            </a>
+                                                                                        ) : (
+                                                                                            <span className="text-text-muted italic">Non communiquée</span>
+                                                                                        )}
+                                                                                    </td>
+                                                                                    <td className="px-2 lg:px-5 py-2.5 text-xs text-text-secondary">
+                                                                                        {latitude != null && longitude != null ? (
+                                                                                            <a
+                                                                                                href={`https://www.google.fr/maps/dir/?api=1&destination=${latitude},${longitude}`}
+                                                                                                target="_blank"
+                                                                                                rel="noopener noreferrer"
+                                                                                                className="inline-flex items-center gap-1 hover:text-sage-700 transition-colors"
+                                                                                            >
+                                                                                                {latitude.toFixed(6)}, {longitude.toFixed(6)}
+                                                                                                <svg className="w-3 h-3 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                                                                </svg>
+                                                                                            </a>
+                                                                                        ) : (
+                                                                                            <span className="text-text-muted italic">—</span>
+                                                                                        )}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        })}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )
+                                            })}
                                         </div>
                                     )}
                                 </div>

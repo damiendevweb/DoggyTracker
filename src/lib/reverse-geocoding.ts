@@ -19,7 +19,7 @@ export const reverseGeocode = async (
   lng: number
 ): Promise<ReverseGeocodeResult> => {
   const res = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&lat=${lat}&lon=${lng}`
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&lat=${lat}&lon=${lng}`
   )
 
   if (!res.ok) {

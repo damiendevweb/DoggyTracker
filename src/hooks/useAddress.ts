@@ -18,7 +18,7 @@ export function useAddress(lat: number, lng: number) {
 
     let cancelled = false
 
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`)
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&zoom=18`)
       .then(res => res.json())
       .then((data: Address) => {
         if (!cancelled) {
