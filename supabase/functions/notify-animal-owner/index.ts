@@ -1,7 +1,9 @@
-// @ts-nocheck — Deno runtime, not Node.js
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- Deno runtime, not Node.js
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+// @ts-ignore -- Supabase Edge Functions resolve npm: imports at runtime
 import { createClient } from 'npm:@supabase/supabase-js@2'
+// @ts-ignore -- Supabase Edge Functions resolve npm: imports at runtime
 import webpush from 'npm:web-push'
 
 const corsHeaders = {
@@ -153,7 +155,7 @@ Deno.serve(async (req) => {
                   sentAt: new Date().toISOString(),
                   title,
                   body,
-                  url: `/dashboard/animal/${animal.id}`,
+                  url: `/dashboard`,
                   animalId: animal.id,
                   animalName,
                   eventType: event.event_type,
@@ -177,11 +179,12 @@ Deno.serve(async (req) => {
                               notificationPayload
                         )
                         sent++
-                  } catch (error: any) {
+                  } catch (error: unknown) {
                         failed++
-                        console.error('Push error for subscription', sub.id, error)
+                        const err = error instanceof Error ? error : new Error(String(error))
+                        console.error('Push error for subscription', sub.id, err)
 
-                        const statusCode = error?.statusCode || error?.status
+                        const statusCode = (error as Record<string, unknown>)?.statusCode ?? (error as Record<string, unknown>)?.status
                         if (statusCode === 404 || statusCode === 410) {
                               invalidSubscriptionIds.push(sub.id)
                         }
@@ -200,12 +203,13 @@ Deno.serve(async (req) => {
                         headers: corsHeaders,
                   }
             )
-      } catch (error: any) {
-            console.error('Unhandled error in notify-animal-owner:', error)
+      } catch (error: unknown) {
+            const err = error instanceof Error ? error : new Error(String(error))
+            console.error('Unhandled error in notify-animal-owner:', err)
 
             return new Response(
                   JSON.stringify({
-                        error: error?.message ?? 'Internal server error',
+                        error: err.message ?? 'Internal server error',
                   }),
                   {
                         status: 500,

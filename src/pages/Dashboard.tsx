@@ -124,8 +124,8 @@ export const Dashboard = () => {
 
             await fetchAnimal()
             setEditing(false)
-        } catch (error: any) {
-            setError(error.message)
+        } catch (error: unknown) {
+            setError(error instanceof Error ? error.message : 'Erreur inconnue')
         }
     }
 
@@ -336,6 +336,7 @@ export const Dashboard = () => {
                                                         <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Date</th>
                                                         <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Heure</th>
                                                         <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Adresse</th>
+                                                        <th className="px-5 py-2.5 text-left text-[10px] font-semibold text-text-muted uppercase tracking-wider">Coordonnées GPS</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -344,12 +345,23 @@ export const Dashboard = () => {
                                                         const date = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
                                                         const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
                                                         const address = scan.meta?.address ?? null
+                                                        const latitude = scan.meta?.latitude ?? null
+                                                        const longitude = scan.meta?.longitude ?? null
                                                         return (
                                                             <tr key={scan.id} className="border-b border-border last:border-0 hover:bg-bg-hover transition-colors">
                                                                 <td className="px-5 py-3 text-xs text-text-primary">{date}</td>
                                                                 <td className="px-5 py-3 text-xs text-text-primary">{time}</td>
                                                                 <td className="px-5 py-3 text-xs text-text-secondary">
                                                                     {address || <span className="text-text-muted italic">Non communiquée</span>}
+                                                                </td>
+                                                                <td className="px-5 py-3 text-xs text-text-secondary">
+                                                                    {latitude != null && longitude != null ? (
+                                                                        <span className="text-text-muted italic">
+                                                                            {latitude.toFixed(6)}, {longitude.toFixed(6)}
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="text-text-muted italic">Non communiquées</span>
+                                                                    )}
                                                                 </td>
                                                             </tr>
                                                         )

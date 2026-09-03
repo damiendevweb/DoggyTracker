@@ -111,9 +111,9 @@ export const ProductPage = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-bg">
+        <div className="min-h-screen">
             <div className="max-w-6xl mx-auto px-5 py-10">
-                <div className="lg:grid lg:gap-10 lg:grid-cols-2 lg:items-start">
+                <div className="lg:grid lg:gap-8 lg:grid-cols-2 lg:items-start">
                     <ProductImageGallery images={sortedImages} productName={product.name} />
 
                     <div className="flex flex-col gap-6 mt-8 lg:mt-0">

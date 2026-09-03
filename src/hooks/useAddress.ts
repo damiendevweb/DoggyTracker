@@ -10,21 +10,26 @@ interface Address {
 
 export function useAddress(lat: number, lng: number) {
   const [address, setAddress] = useState<Address | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(!lat || !lng ? false : true)
   const [error, setError] = useState('')
 
   useEffect(() => {
     if (!lat || !lng) return
 
-    setLoading(true)
+    let cancelled = false
+
     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`)
       .then(res => res.json())
       .then((data: Address) => {
-        setAddress(data)
-        setError('')
+        if (!cancelled) {
+          setAddress(data)
+          setError('')
+        }
       })
-      .catch(() => setError('Adresse indisponible'))
-      .finally(() => setLoading(false))
+      .catch(() => { if (!cancelled) setError('Adresse indisponible') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+
+    return () => { cancelled = true }
   }, [lat, lng])
 
   return { address, loading, error }

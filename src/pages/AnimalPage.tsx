@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { reverseGeocode } from '../lib/reverse-geocoding'
@@ -43,7 +43,7 @@ export const AnimalPage = () => {
     const [formData,] = useState<Partial<Animal>>({})
     const hasSentAccessEvent = useRef(false)
     const toastShownRef = useRef(false)
-    const manualNotifyPending = useRef(false)
+    const [manualNotifyPending, setManualNotifyPending] = useState(false)
 
     const { display: ageDisplay } = useAge(formData.birth_date)
     const { getLocationPromise } = useGeolocation()
@@ -172,14 +172,15 @@ export const AnimalPage = () => {
         }, TOAST_DELAY_MS)
 
         return () => clearTimeout(toastTimer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [animal?.id, getLocationPromise, showToast])
 
-    const handleManualNotify = async () => {
-        if (manualNotifyPending.current) return
-        manualNotifyPending.current = true
+    const handleManualNotify = useCallback(async () => {
+        if (manualNotifyPending) return
+        setManualNotifyPending(true)
 
         const geo = await getLocationPromise(LOCATION_TIMEOUT_MS)
-        manualNotifyPending.current = false
+        setManualNotifyPending(false)
 
         if (!geo) {
             showToast({
@@ -206,11 +207,12 @@ export const AnimalPage = () => {
             await sendNotificationWithLocation({ ...manualMeta, ...latlng })
             showToast({ message: 'Propriétaire prévenu', type: 'success' })
         }
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [manualNotifyPending])
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-bg">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-8 h-8 rounded-full border-2 border-border border-t-accent animate-spin mx-auto mb-3" />
                     <p className="text-sm text-text-muted">{normalizedAnimalId}</p>
@@ -221,7 +223,7 @@ export const AnimalPage = () => {
 
     if (error || !animal) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-bg">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center p-8 max-w-md">
                     <span className="text-4xl block mb-4">🐶</span>
                     <h2 className="font-unbounded text-2xl font-bold text-text-primary mb-2">{normalizedAnimalId}</h2>
@@ -348,10 +350,10 @@ export const AnimalPage = () => {
                         <button
                             type="button"
                             onClick={handleManualNotify}
-                            disabled={manualNotifyPending.current}
+                            disabled={manualNotifyPending}
                             className="w-full bg-accent hover:bg-accent-hover text-bg font-semibold text-sm py-2.5 rounded transition-colors disabled:opacity-50"
                         >
-                            {manualNotifyPending.current ? 'Localisation en cours...' : 'Prévenir le propriétaire que vous avez retrouvé son animal'}
+                            {manualNotifyPending ? 'Localisation en cours...' : 'Prévenir le propriétaire que vous avez retrouvé son animal'}
                         </button>
                     </div>
                 </div>

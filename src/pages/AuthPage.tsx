@@ -5,14 +5,14 @@ import { useEffect, useState } from 'react'
 
 export const AuthPage = () => {
     const { user, signUp, signIn } = useAuth()
-    const [isSignUp, setIsSignUp] = useState(false)
+    const [searchParams] = useSearchParams();
+    const [isSignUp, setIsSignUp] = useState(() => searchParams.get('mode') === 'signup')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [prenom, setPrenom] = useState('')
-    const [animalId, setAnimalId] = useState('')
+    const [animalId, setAnimalId] = useState(() => searchParams.get('animal')?.toUpperCase() ?? '')
     const [error, setError] = useState<string | null>(null)
     const [info, setInfo] = useState<string | null>(null);
-    const [searchParams] = useSearchParams();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -24,8 +24,8 @@ export const AuthPage = () => {
             } else {
                 await signIn(email, password)
             }
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Erreur inconnue')
         }
     }
 
@@ -48,17 +48,6 @@ export const AuthPage = () => {
             setInfo("Email de réinitialisation envoyé. Vérifie ta boîte mail.");
         }
     };
-
-    useEffect(() => {
-        const animalParam = searchParams.get('animal');
-        const modeParam = searchParams.get('mode');
-        if (animalParam && !animalId) {
-            setAnimalId(animalParam.toUpperCase());
-        }
-        if (modeParam === 'signup' && !isSignUp) {
-            setIsSignUp(true);
-        }
-    }, [searchParams]);
 
     useEffect(() => {
         if (user) {
