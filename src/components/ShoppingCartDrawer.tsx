@@ -181,12 +181,13 @@ export const ShoppingCartDrawer = () => {
                     </p>
 
                     <div className="mt-6">
-                      <a
-                        href="#"
+                      <Link
+                        to="/commande"
+                        onClick={() => setOpen(false)}
                         className="flex items-center justify-center rounded border border-transparent bg-accent px-6 py-3 text-sm font-medium text-bg hover:bg-accent-hover"
                       >
                         Valider mon panier
-                      </a>
+                      </Link>
                     </div>
 
                     <div className="mt-6 flex justify-center text-center text-xs text-text-muted">

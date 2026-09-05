@@ -21,6 +21,9 @@ export default function SidebarProfile() {
         <Link to="/dashboard" className={linkClass('/dashboard')}>
           Mon animal
         </Link>
+        <Link to="/mes-commandes" className={linkClass('/mes-commandes')}>
+          Mes commandes
+        </Link>
         <button
           type="button"
           onClick={signOut}

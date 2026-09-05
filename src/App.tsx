@@ -20,6 +20,9 @@ import { BlogPostPage } from './pages/BlogPostPage'
 import { NotreHistoire } from './pages/NotreHistoire'
 import { LeConcept } from './pages/LeConcept'
 import { ToastProvider } from './components/Toast'
+import { CheckoutPage } from './pages/CheckoutPage'
+import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage'
+import { OrdersPage } from './pages/OrdersPage'
 
 function App() {
   const { user, loading } = useAuth()
@@ -52,6 +55,10 @@ function App() {
             path="/profile"
             element={user ? <ProfilePage /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/mes-commandes"
+            element={user ? <OrdersPage /> : <Navigate to="/login" />}
+          />
           <Route path='categorie/medaille-gravee' element={<ProductList />} />
           <Route path='produit/:slug' element={<ProductPage />} />
           <Route path='generate-qr-code' element={<GenerateQR />} />
@@ -59,6 +66,8 @@ function App() {
           <Route path='notre-histoire' element={<NotreHistoire />} />
           <Route path='le-concept' element={<LeConcept />} />
           <Route path='blog/:slug' element={<BlogPostPage />} />
+          <Route path='/commande' element={<CheckoutPage />} />
+          <Route path='/paiement/succes' element={<CheckoutSuccessPage />} />
 
           <Route path="/:animalId" element={<AnimalPage />} />
 

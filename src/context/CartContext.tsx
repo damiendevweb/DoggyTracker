@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 export type CartCustomization = {
   petName: string
@@ -45,16 +45,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
   }, [cart])
 
-  const addToCart = (item: Omit<CartItem, 'cartItemId'>) => {
+  const addToCart = useCallback((item: Omit<CartItem, 'cartItemId'>) => {
     const cartItemId = crypto.randomUUID()
     setCart((prev) => [...prev, { ...item, cartItemId }])
-  }
+  }, [])
 
-  const removeFromCart = (cartItemId: string) => {
+  const removeFromCart = useCallback((cartItemId: string) => {
     setCart((prev) => prev.filter((item) => item.cartItemId !== cartItemId))
-  }
+  }, [])
 
-  const clearCart = () => setCart([])
+  const clearCart = useCallback(() => setCart([]), [])
 
   const cartCount = cart.length
 
