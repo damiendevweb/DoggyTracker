@@ -21,7 +21,7 @@ type Animal = {
     id: string
     nom: string
     race: string
-    age: number
+    age: number | null
     poids: number
     ok_congenere: boolean
     ok_enfants: boolean
@@ -31,11 +31,30 @@ type Animal = {
     mail_2: string | null
     prenom_proprietaire: string
     telephone_veterinaire: string
+    created_at: string
+    user_id: string | null
+    qr_url: string | null
     birth_date?: string
 }
 
+const toFormData = (a: Animal): Partial<Animal> => ({
+    nom: a.nom,
+    race: a.race,
+    birth_date: a.birth_date,
+    poids: a.poids,
+    ok_congenere: a.ok_congenere,
+    ok_enfants: a.ok_enfants,
+    prenom_proprietaire: a.prenom_proprietaire,
+    telephone_1: a.telephone_1,
+    telephone_2: a.telephone_2,
+    mail_1: a.mail_1,
+    mail_2: a.mail_2,
+    telephone_veterinaire: a.telephone_veterinaire,
+})
+
 export const Dashboard = () => {
-    const [animal, setAnimal] = useState<Animal | null>(null)
+    const [animals, setAnimals] = useState<Animal[]>([])
+    const [selectedId, setSelectedId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [editing, setEditing] = useState(false)
@@ -45,6 +64,8 @@ export const Dashboard = () => {
     const [scansLoading, setScansLoading] = useState(true)
     const [historyOpen, setHistoryOpen] = useState(false)
     const [openMonths, setOpenMonths] = useState<Set<string>>(new Set())
+
+    const animal = animals.find((a) => a.id === selectedId) ?? animals[0] ?? null
 
     const scansByMonth = useMemo(() => {
         const groups = new Map<string, { calendarDate: string; items: ScanEvent[] }>()
@@ -71,7 +92,7 @@ export const Dashboard = () => {
         })
     }
 
-    const fetchAnimal = async () => {
+    const fetchAnimals = async () => {
         const { data: { user } } = await supabase.auth.getUser()
 
         if (!user) {
@@ -80,35 +101,32 @@ export const Dashboard = () => {
             return
         }
 
-        const { data: profile } = await supabase
-            .from('profile')
-            .select('animal_id')
-            .eq('id', user.id)
-            .single()
-
-        if (!profile?.animal_id) {
-            setError('Aucun animal lié à ton compte')
-            setLoading(false)
-            return
-        }
-
-        const { data: animalData, error } = await supabase
+        const { data, error } = await supabase
             .from('animal')
             .select('*')
-            .eq('id', profile.animal_id)
-            .single()
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
 
         if (error) {
             setError(error.message)
         } else {
-            setAnimal(animalData)
+            setAnimals(data as Animal[] ?? [])
+            setSelectedId(prev => (prev && data?.some((a) => a.id === prev) ? prev : (data?.[0]?.id ?? null)))
         }
 
         setLoading(false)
     }
 
+    const selectAnimal = (id: string) => {
+        setSelectedId(id)
+        setEditing(false)
+        setFormData({})
+        setHistoryOpen(false)
+        setOpenMonths(new Set())
+    }
+
     useEffect(() => {
-        fetchAnimal()
+        void fetchAnimals()
     }, [])
 
     useEffect(() => {
@@ -131,7 +149,7 @@ export const Dashboard = () => {
 
     useEffect(() => {
         if (animal && editing) {
-            setFormData(animal)
+            setFormData(toFormData(animal))
         }
     }, [animal, editing])
 
@@ -148,7 +166,7 @@ export const Dashboard = () => {
 
             if (error) throw error
 
-            await fetchAnimal()
+            await fetchAnimals()
             setEditing(false)
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : 'Erreur inconnue')
@@ -194,9 +212,37 @@ export const Dashboard = () => {
         <div className="md:flex flex-1">
             <SidebarProfile />
             <div className="flex-1 p-6 md:p-10">
-                <div className="mx-auto max-w-2xl bg-bg-elevated border border-border rounded p-8">
+                <div className="mx-auto max-w-2xl">
+                    <div className="mb-6">
+                        <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
+                            Mes animaux ({animals.length})
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {animals.map((a) => (
+                                <button
+                                    key={a.id}
+                                    type="button"
+                                    onClick={() => selectAnimal(a.id)}
+                                    aria-pressed={a.id === animal.id}
+                                    className={`flex items-center gap-2 rounded border px-3 py-2 text-left transition-colors ${
+                                        a.id === animal.id
+                                            ? 'border-accent bg-accent text-bg'
+                                            : 'border-border bg-bg-elevated text-text-secondary hover:border-accent/50 hover:text-text-primary'
+                                    }`}
+                                >
+                                    <span className="text-sm font-medium">{a.nom}</span>
+                                    <span className={`font-mono text-[10px] ${a.id === animal.id ? 'text-bg/70' : 'text-text-muted'}`}>
+                                        {a.id}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="bg-bg-elevated border border-border rounded p-8">
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex items-center gap-3">
+
                             <span className="bg-bg-surface text-text-muted px-3 py-1 rounded text-xs border border-border">
                                 {animal.id}
                             </span>
@@ -457,6 +503,7 @@ export const Dashboard = () => {
                             <TestPushButton />
                         </div>
                     </form>
+                    </div>
                 </div>
             </div>
         </div>

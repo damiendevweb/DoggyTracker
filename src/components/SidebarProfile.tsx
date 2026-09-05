@@ -1,9 +1,27 @@
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { supabase } from '../lib/supabase'
 
 export default function SidebarProfile() {
   const location = useLocation()
-  const { signOut } = useAuth()
+  const { user, signOut } = useAuth()
+  const [animalCount, setAnimalCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!user) return
+    let cancelled = false
+    supabase
+      .from('animal')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .then(({ count }) => {
+        if (!cancelled) setAnimalCount(count)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [user])
 
   const linkClass = (path: string) =>
     `block px-3 py-2 text-xs font-medium transition-colors rounded ${
@@ -19,7 +37,7 @@ export default function SidebarProfile() {
           Mon profil
         </Link>
         <Link to="/dashboard" className={linkClass('/dashboard')}>
-          Mon animal
+          {(animalCount ?? 0) > 1 ? 'Mes animaux' : 'Mon animal'}
         </Link>
         <Link to="/mes-commandes" className={linkClass('/mes-commandes')}>
           Mes commandes
