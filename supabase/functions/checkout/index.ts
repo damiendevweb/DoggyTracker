@@ -249,17 +249,7 @@ Deno.serve(async (req) => {
         allow_promotion_codes: true,
         shipping_address_collection: { allowed_countries: ['FR'] },
         shipping_options: [
-          {
-            shipping_rate_data: {
-              type: 'fixed_amount',
-              fixed_amount: { amount: 0, currency: 'eur' },
-              display_name: 'Livraison offerte',
-              delivery_estimate: {
-                minimum: { unit: 'business_day', value: 5 },
-                maximum: { unit: 'business_day', value: 7 },
-              },
-            },
-          },
+          { shipping_rate: 'shr_1UCSynCXJb1kHoqtrKKY6NFZ' },
         ],
         metadata: {
           order_id: orderId,
