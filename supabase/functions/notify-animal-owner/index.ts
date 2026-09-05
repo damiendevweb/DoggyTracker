@@ -1,8 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore -- Deno runtime, not Node.js
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore -- Supabase Edge Functions resolve npm: imports at runtime
 import { createClient } from 'npm:@supabase/supabase-js@2'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore -- Supabase Edge Functions resolve npm: imports at runtime
 import webpush from 'npm:web-push'
 
